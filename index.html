@@ -8,10 +8,52 @@
 </head>
 <body>
     
+    <!-- BARRA DE NAVEGACIÓN  -->
+    <nav>
+        <a href="#">Infraestructure App</a>
+        
+        <ul></ul>
+        <form>
+            <input name="search" id="search" type="search" placeholder="ID">
+            <button type="submit" onclick="buscarID(event)">Buscar</button>
+        </form>
+    </nav>
+    <br>
+    <div>
+        <div>
+        <!-- FORMULARIO PARA AGREGAR PRODUCTO -->
+        <form id="task-form">
+            <div>
+            <input type="text" id="name" placeholder="Nombre de objetivo">
+            </div>
+            <input type="hidden" id="ObjetivoId">
+            <button type="submit" onclick="agregarObjetivo(event)" >
+            Agregar Objetivo
+            </button>
+        </form>
+        </div>
+
+        <!-- TABLA  -->
+        <div>
+        <ul></ul>
+
+        <table>
+            <thead>
+            <tr>
+                <td>Id</td>
+                <td>Nombre</td>
+                <td>Descripcion</td>
+            </tr>
+            </thead>
+            <tbody id="objetivos"></tbody>
+        </table>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
     <!-- Lógica del Frontend -->
     <script src="app.js"></script>
 </body>
-</html>DOCTYPE
+</html>
