@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,36 +12,35 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <h3 class="text-center mb-4">Registro de Cuenta</h3>
-                <form>
+                <form action="registro.php" method="POST">
                     <!-- Nombre de Usuario -->
                     <div class="mb-3">
                         <label for="username" class="form-label">Nombre de Usuario</label>
-                        <input type="text" class="form-control" id="username" placeholder="Ingrese su nombre de usuario" required>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Ingrese su nombre de usuario" required>
                     </div>
                     
                     <!-- Correo Electrónico -->
                     <div class="mb-3">
                         <label for="email" class="form-label">Correo Electrónico</label>
-                        <input type="email" class="form-control" id="email" placeholder="Ingrese su correo electrónico" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Ingrese su correo electrónico" required>
                     </div>
                     
                     <!-- Contraseña -->
                     <div class="mb-3">
                         <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="password" placeholder="Ingrese su contraseña" required>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Ingrese su contraseña" required>
                     </div>
                     
                     <!-- Nombre de Empresa o Proyecto -->
                     <div class="mb-3">
                         <label for="company" class="form-label">Nombre de Empresa o Proyecto</label>
-                        <input type="text" class="form-control" id="company" placeholder="Ingrese el nombre de su empresa o proyecto" required>
+                        <input type="text" class="form-control" id="company" name="company" placeholder="Ingrese el nombre de su empresa o proyecto" required>
                     </div>
                     
                     <!-- Ubicación -->
                     <div class="mb-3">
                         <label for="ubicacion" class="form-label">Ubicación</label>
-                        <input type="text" class="form-control" id="ubicacion" placeholder="Ingrese la ubicacion" required>
-
+                        <input type="text" class="form-control" id="ubicacion" name="ubicacion" placeholder="Ingrese la ubicación" required>
                     </div>
                     
                     <!-- Botón de Enviar -->
