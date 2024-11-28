@@ -9,7 +9,5 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Aquí puedes mostrar información del usuario
-echo "<h1>Bienvenido, " . $_SESSION['username'] . "!</h1>";
-echo "<p>Este es tu panel de control.</p>";
+include 'dashboard.html'
 ?>
