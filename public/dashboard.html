@@ -11,7 +11,7 @@
     <div class="d-flex">
         <!-- Menú de navegación -->
         <nav class="bg-dark text-white vh-100 p-3" style="width: 250px;">
-            <h2 class="text-center">Dashboard</h2>
+            <h2 class="text-center">EcoTrack</h2>
             <ul class="nav flex-column mt-4">
             <li class="nav-item mb-2">
                 <a href="index.html" class="nav-link text-white">Inicio</a>
@@ -20,7 +20,7 @@
                 <a href="dashboard.html" class="nav-link text-white">Estadísticas</a>
             </li>
             <li class="nav-item mb-2">
-                <a href="#" class="nav-link text-white">Objetivos</a>
+                <a href="#" class="nav-link text-white">Metas y Objetivos</a>
             </li>
             <li class="nav-item mb-2">
                 <a href="profile.html" class="nav-link text-white">Perfil</a>
@@ -29,5 +29,47 @@
                 <a href="login.html" class="nav-link text-white">Salir</a>
             </li>
             </ul>
-        </nav></body>
+        </nav>
+
+        <div class="flex-grow-1 bg-light p-4">
+            <!-- Encabezado -->
+            <div class="bg-primary text-white rounded p-3 mb-4 text-center">
+            <h1>Bienvenido al Dashboard</h1>
+            </div>
+            <!-- Tarjetas del dashborad -->
+            <div class="row g-3">
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Gráfica de barras</h5>
+                    <p class="card-text">Aqui va a ir una gráfica de barras</p>
+                </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Gráfica de circulo</h5>
+                    <p class="card-text">Aqui va una grafica de circulo</p>
+                </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Otra gráfica</h5>
+                    <p class="card-text">Aqui va otra grafica mas</p>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <!-- Lógica del Frontend -->
+    <script src="app.js"></script>
+</body>
 </html>
