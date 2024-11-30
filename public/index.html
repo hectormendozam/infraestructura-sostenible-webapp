@@ -30,6 +30,30 @@
             </ul>
         </nav>
 
+        <div class="flex-grow-1 bg-light p-4">
+        <!-- TABLA  -->
+        <div class="col-md-7">
+            <div class="card my-4 d-none" id="product-result">
+            <div class="card-body">
+                <!-- RESULTADO -->
+                <ul id="container"></ul>
+            </div>
+            </div>
+
+            <table class="table table-bordered table-sm">
+            <thead>
+                <tr>
+                <td>Id</td>
+                <td>Nombre</td>
+                <td>Descripción</td>
+                </tr>
+            </thead>
+            <tbody id="products"></tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
