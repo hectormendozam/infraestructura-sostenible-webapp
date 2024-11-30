@@ -31,6 +31,46 @@
             </ul>
         </nav>
 
+        <div class="flex-grow-1 bg-light p-4">
+            <div class="container">
+                <!-- Encabezado -->
+                <div class="bg-primary text-white rounded p-3 mb-4 text-center">
+                    <h1>Perfil de Usuario</h1>
+                </div>
+
+                <!-- Información del usuario -->
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Información Personal</h5>
+                        <form id="profileForm">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="username" class="form-label">Nombre de Usuario</label>
+                                    <input type="text" class="form-control" id="username" value="usuarioEjemplo" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">Correo Electrónico</label>
+                                    <input type="email" class="form-control" id="email" value="usuario@ejemplo.com" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="fullname" class="form-label">Nombre Completo</label>
+                                    <input type="text" class="form-control" id="fullname" value="Nombre Apellido" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="role" class="form-label">Rol</label>
+                                    <input type="text" class="form-control" id="role" value="Administrador" readonly>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <button type="button" class="btn btn-primary" id="editProfile">Editar Perfil</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
