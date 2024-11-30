@@ -3,58 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InfraestructureApp</title>
-    <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
+    <title>EcoTrack</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    
-    <!-- BARRA DE NAVEGACIÓN  -->
-    <nav>
-        <a href="#">Infraestructure App</a>
-        <p class="text-center">
-            <a href="registro.html" class="btn btn-primary">Crear cuenta</a>
-        </p>
-        <p class="text-center">
-            <a href="login.html" class="btn btn-primary">Iniciar Sesión</a>
-        </p>
-        
-        <ul></ul>
-        <form>
-            <input name="search" id="search" type="search" placeholder="ID">
-            <button type="submit" onclick="buscarID(event)">Buscar</button>
-        </form>
-    </nav>
-    <br>
-    <div>
-        <div>
-        <!-- FORMULARIO PARA AGREGAR PRODUCTO -->
-        <form id="task-form">
-            <div>
-            <input type="text" id="name" placeholder="Nombre de objetivo">
-            </div>
-            <input type="hidden" id="ObjetivoId">
-            <button type="submit" onclick="agregarObjetivo(event)" >
-            Agregar Objetivo
-            </button>
-        </form>
-        </div>
-
-        <!-- TABLA  -->
-        <div>
-        <ul></ul>
-
-        <table>
-            <thead>
-            <tr>
-                <td>Id</td>
-                <td>Nombre</td>
-                <td>Descripcion</td>
-            </tr>
-            </thead>
-            <tbody id="objetivos"></tbody>
-        </table>
-        </div>
-    </div>
+    <div class="d-flex">
+        <!-- Menú de navegación -->
+        <nav class="bg-dark text-white vh-100 p-3" style="width: 250px;">
+            <h2 class="text-center">EcoTrack</h2>
+            <ul class="nav flex-column mt-4">
+            <li class="nav-item mb-2">
+                <a href="index.html" class="nav-link text-white">Inicio</a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="dashboard.html" class="nav-link text-white">Estadísticas</a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="#" class="nav-link text-white">Metas y Objetivos</a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="profile.html" class="nav-link text-white">Perfil</a>
+            </li>
+            <li class="nav-item">
+                <a href="login.html" class="nav-link text-white">Salir</a>
+            </li>
+            </ul>
+        </nav>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
