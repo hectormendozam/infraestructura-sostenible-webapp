@@ -30,7 +30,7 @@ $objetivosSerializados = urlencode(json_encode($objetivosSeleccionados));
                 <button type="submit" class="btn btn-primary btn-lg">Generar Reporte</button>
             </form>
             <!-- Botón para volver a la página de objetivos -->
-            <a href="objectives.html" class="btn btn-secondary btn-lg">Volver a Objetivos</a>
+            <a href="../objectives.html" class="btn btn-secondary btn-lg">Volver a Objetivos</a>
         </div>
     </div>
 </body>
