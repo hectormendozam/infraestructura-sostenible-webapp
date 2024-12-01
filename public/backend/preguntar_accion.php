@@ -1,5 +1,8 @@
 <?php
-// Recibir los objetivos seleccionados desde el formulario previo
+// Iniciar sesión para guardar los objetivos
+session_start();
+
+// Recibir los objetivos seleccionados
 $objetivosSeleccionados = isset($_POST['objetivos']) ? $_POST['objetivos'] : [];
 
 if (empty($objetivosSeleccionados)) {
@@ -7,8 +10,8 @@ if (empty($objetivosSeleccionados)) {
     exit;
 }
 
-// Serializar los objetivos para enviarlos a la siguiente página
-$objetivosSerializados = urlencode(json_encode($objetivosSeleccionados));
+// Guardar los objetivos en la sesión
+$_SESSION['objetivos'] = $objetivosSeleccionados;
 ?>
 
 <!DOCTYPE html>
@@ -26,7 +29,6 @@ $objetivosSerializados = urlencode(json_encode($objetivosSeleccionados));
         <div class="d-flex justify-content-center gap-3">
             <!-- Botón para generar un nuevo reporte -->
             <form action="ingresar_reporte.php" method="post">
-                <input type="hidden" name="objetivos" value="<?php echo $objetivosSerializados; ?>">
                 <button type="submit" class="btn btn-primary btn-lg">Generar Reporte</button>
             </form>
             <!-- Botón para volver a la página de objetivos -->
