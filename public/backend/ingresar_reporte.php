@@ -72,17 +72,15 @@ if (empty($objetivosSeleccionados)) {
                     <label for="operationalExpenses" class="form-label">Gastos Operativos Totales ($ MXN)</label>
                     <input type="number" class="form-control" name="operationalExpenses" id="operationalExpenses" placeholder="Costo en pesos MXN">
                 </div>
+                <div class="mb-3">
+                    <label for="budget" class="form-label">Presupuesto Total ($ MXN)</label>
+                    <input type="number" class="form-control" name="budget" id="budget" placeholder="Presupuesto en pesos MXN" required>
+                </div>
+                <div class="mb-3">
+                    <label for="budgetVariance" class="form-label">Variación Presupuestaria ($ MXN)</label>
+                    <input type="number" class="form-control" name="budgetVariance" id="budgetVariance" placeholder="Variación en pesos MXN" required>
+                </div>
             <?php endif; ?>
-
-            <!-- Campos adicionales -->
-            <div class="mb-3">
-                <label for="budget" class="form-label">Presupuesto Total ($ MXN)</label>
-                <input type="number" class="form-control" name="budget" id="budget" placeholder="Presupuesto en pesos MXN" required>
-            </div>
-            <div class="mb-3">
-                <label for="budgetVariance" class="form-label">Variación Presupuestaria ($ MXN)</label>
-                <input type="number" class="form-control" name="budgetVariance" id="budgetVariance" placeholder="Variación en pesos MXN" required>
-            </div>
 
             <!-- Observaciones generales -->
             <div class="mb-3">
