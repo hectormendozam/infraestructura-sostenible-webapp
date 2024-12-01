@@ -1,6 +1,6 @@
 <?php
 // Recibir los objetivos seleccionados
-$objetivosSeleccionados = isset($_POST['objetivos']) ? $_POST['objetivos'] : [];
+$objetivosSeleccionados = isset($_POST['objetivos']) ? json_decode(urldecode($_POST['objetivos']), true) : [];
 
 if (empty($objetivosSeleccionados)) {
     echo "No se seleccionaron objetivos. <a href='../index.html'>Volver</a>";
