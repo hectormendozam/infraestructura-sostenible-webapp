@@ -1,9 +1,12 @@
 <?php
-// Recibir los objetivos seleccionados
-$objetivosSeleccionados = isset($_POST['objetivos']) ? json_decode(urldecode($_POST['objetivos']), true) : [];
+// Iniciar sesión para acceder a los objetivos guardados
+session_start();
+
+// Verificar si hay objetivos en la sesión
+$objetivosSeleccionados = isset($_SESSION['objetivos']) ? $_SESSION['objetivos'] : [];
 
 if (empty($objetivosSeleccionados)) {
-    echo "No se seleccionaron objetivos. <a href='../index.html'>Volver</a>";
+    echo "No hay objetivos seleccionados. <a href='../objectives.html'>Volver</a>";
     exit;
 }
 ?>
