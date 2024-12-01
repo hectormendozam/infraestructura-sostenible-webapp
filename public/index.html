@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EcoTrack - Inicio</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="img/planeta.png" type="image/x-icon">
 </head>
 <body>
     <div class="d-flex">
@@ -34,7 +35,7 @@
         <!-- Barra de navegación superior -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 rounded">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Proyectos Registrados</a>
+                <a class="navbar-brand" href="#">Proyectos de Infraestructura</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -46,9 +47,26 @@
                 </div>
             </div>
         </nav>
+
+        <!-- Contenido principal en columnas -->
+        <div class="row">
+        <!-- Columna del formulario -->
+        <div class="col-md-4">
+            <form id="project-form">
+                <div class="form-group">
+                    <fieldset>
+                        <input class="form-control mb-3" type="text" id="project-name" placeholder="Nombre de proyecto" onblur="validarNombre();">
+                        <textarea class="form-control mb-3" name="descripcion" id="descripcion" placeholder="Detalles del proyecto" onblur="validarDescripcion();"></textarea>
+                    </fieldset>                
+                </div>
+                <input type="hidden" id="projectId">
+                <button class="btn btn-primary w-100" type="submit">Agregar Proyecto</button>
+            </form>
+        </div>
+        
         <!-- TABLA  -->
-        <div class="col-md-7">
-            <div class="card my-4 d-none" id="product-result">
+        <div class="col-md-8">
+            <div class="card my-4 d-none" id="project-result">
             <div class="card-body">
                 <!-- RESULTADO -->
                 <ul id="container"></ul>
@@ -63,7 +81,7 @@
                 <td>Descripción</td>
                 </tr>
             </thead>
-            <tbody id="products"></tbody>
+            <tbody id="projects"></tbody>
             </table>
         </div>
         </div>
