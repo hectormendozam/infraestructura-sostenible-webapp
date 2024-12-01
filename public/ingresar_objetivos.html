@@ -61,29 +61,30 @@
             <form action="backend/ingresar_reporte.php" method="post">
                 <!-- Lista de opciones -->
                 <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" value="agua" id="agua">
+                    <input class="form-check-input" type="checkbox" name="objetivos[]" value="agua" id="agua">
                     <label class="form-check-label" for="agua">
                         <i class="bi bi-droplet-fill text-primary"></i> Gasto de agua
                     </label>
                 </div>
                 <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" value="energia" id="energia">
+                    <input class="form-check-input" type="checkbox" name="objetivos[]" value="energia" id="energia">
                     <label class="form-check-label" for="energia">
                         <i class="bi bi-lightning-fill text-warning"></i> Consumo energético
                     </label>
                 </div>
                 <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" value="operacion" id="operacion">
+                    <input class="form-check-input" type="checkbox" name="objetivos[]" value="operacion" id="operacion">
                     <label class="form-check-label" for="operacion">
                         <i class="bi bi-cash-coin text-success"></i> Gastos de operación
                     </label>
                 </div>
-
+            
                 <!-- Botón de enviar -->
                 <div class="d-grid bsubmit">
                     <button type="submit" class="btn btn-primary btn-large">Guardar Objetivos</button>
                 </div>
             </form>
+            
         </div>
     </div>
 
