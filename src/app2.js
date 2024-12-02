@@ -16,7 +16,7 @@ $(document).ready(function() {
 
         // Enviar los datos mediante AJAX
         $.ajax({
-            url: 'add-project.php',
+            url: '../docs/add-project.php',
             type: 'POST',
             data: { nombre: nombre, descripcion: descripcion },
             success: function(response) {
@@ -39,7 +39,7 @@ $(document).ready(function() {
     // Función para listar proyectos
     function listarProyectos() {
         $.ajax({
-            url: './list-projects.php',
+            url: '../docs/list-projects.php',
             type: 'GET',
             success: function(response) {
                 const projects = JSON.parse(response);
@@ -65,4 +65,40 @@ $(document).ready(function() {
             }
         });
     }
+
+    $('#project-form').submit(function (e) {
+        e.preventDefault();
+    
+        let name = $('#name').val().trim();
+        let description = $('#description').val().trim();
+    
+        if (!name || !description) {
+            alert('Por favor, completa todos los campos.');
+            return;
+        }
+    
+        $.ajax({
+            url: '../docs/add-project.php',
+            type: 'POST',
+            data: { name, description },
+            success: function (response) {
+                try {
+                    const jsonResponse = JSON.parse(response);
+                    if (jsonResponse.status === 'success') {
+                        alert('Proyecto agregado correctamente');
+                        listarProyectos();
+                    } else {
+                        alert('Error: ' + jsonResponse.message);
+                    }
+                } catch (e) {
+                    console.error('Error de JSON:', e, response);
+                    alert('Error inesperado en el servidor.');
+                }
+            },
+            error: function () {
+                alert('Error al comunicarse con el servidor.');
+            }
+        });
+    });
+    
 });
