@@ -10,8 +10,32 @@ if (empty($objetivosSeleccionados)) {
     exit;
 }
 
-// Guardar los objetivos en la sesión
-$_SESSION['objetivos'] = $objetivosSeleccionados;
+// Conectar a la base de datos
+$conexion = new mysqli('localhost', 'root', '12345678', 'proyecto_db');
+if ($conexion->connect_error) {
+    die('Error de conexión: ' . $conexion->connect_error);
+}
+
+// Insertar los objetivos en la tabla `objetivo`
+foreach ($objetivosSeleccionados as $tipo) {
+    // Validar si ya existe un objetivo activo del mismo tipo
+    $consulta = $conexion->prepare("SELECT id FROM objetivo WHERE tipo = ? AND activo = 1");
+    $consulta->bind_param('s', $tipo);
+    $consulta->execute();
+    $resultado = $consulta->get_result();
+
+    if ($resultado->num_rows === 0) {
+        // Insertar el nuevo objetivo con cantidad inicial en 0
+        $insercion = $conexion->prepare("INSERT INTO objetivo (tipo, cantidad, activo, fecha_creacion) VALUES (?, 0, 1, NOW())");
+        $insercion->bind_param('s', $tipo);
+        $insercion->execute();
+    }
+
+    $consulta->close();
+}
+
+// Cerrar la conexión
+$conexion->close();
 ?>
 
 <!DOCTYPE html>
