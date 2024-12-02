@@ -108,6 +108,6 @@ if (!isset($_SESSION['user_id'])) {
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
     <!-- Lógica del Frontend -->
-    <script src="../app.js"></script>
+    <script src="../app2.js"></script>
 </body>
 </html>
