@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$user = $_SESSION['user'];
+$user_id = $_SESSION['user_id'];
 // Obtener los datos del usuario de la base de datos
 $sql = "SELECT username, email, location, company FROM usuarios WHERE id = ?";
 $stmt = $conn->prepare($sql);
@@ -79,19 +79,19 @@ $conn->close();
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label for="username" class="form-label">Nombre de Usuario</label>
-                                    <input type="text" class="form-control" id="username" value="<?php echo htmlspecialchars($user['username']); ?>" readonly>
+                                    <input type="text" class="form-control" id="username" value="<?php echo htmlspecialchars($username); ?>" readonly>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="email" class="form-label">Correo Electrónico</label>
-                                    <input type="email" class="form-control" id="email" value="<?php echo htmlspecialchars($user['email']); ?>" readonly>
+                                    <input type="email" class="form-control" id="email" value="<?php echo htmlspecialchars($email); ?>" readonly>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="fullname" class="form-label">Ubicación</label>
-                                    <input type="text" class="form-control" id="location" value="<?php echo htmlspecialchars($user['location']); ?>" readonly>
+                                    <label for="location" class="form-label">Ubicación</label>
+                                    <input type="text" class="form-control" id="location" value="<?php echo htmlspecialchars($location); ?>" readonly>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="role" class="form-label">Empresa</label>
-                                    <input type="text" class="form-control" id="company" value="<?php echo htmlspecialchars($user['company']); ?>" readonly>
+                                    <input type="text" class="form-control" id="company" value="<?php echo htmlspecialchars($company); ?>" readonly>
                                 </div>
                             </div>
                             <div class="mt-4">
