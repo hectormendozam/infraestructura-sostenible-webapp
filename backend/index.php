@@ -9,5 +9,5 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-include './index.html'
+include '../src/screens/index.html'
 ?>
