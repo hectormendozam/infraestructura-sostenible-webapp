@@ -112,6 +112,7 @@ $(document).ready(function(){
                     descripcion: description
                 },
                 success: function(response) {
+                    console.log(response);
                     // Manejar la respuesta del servidor
                     var responseData = JSON.parse(response);  // Asumimos que el servidor devuelve JSON
     

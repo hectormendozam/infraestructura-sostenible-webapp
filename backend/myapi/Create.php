@@ -15,7 +15,7 @@ class Create extends Database {
             'status'  => 'error',
             'message' => 'Ya existe un proyecto con ese nombre'
         );
-        if(isset($jsonOBJ->name)) {
+        if(isset($jsonOBJ->nombre, $jsonOBJ->descripcion)) {
             // SE ASUME QUE LOS DATOS YA FUERON VALIDADOS ANTES DE ENVIARSE
             $sql = "SELECT * FROM proyectos WHERE nombre = '{$jsonOBJ->nombre}' AND eliminado = 0";
             $result = $this->conexion->query($sql);
@@ -26,6 +26,7 @@ class Create extends Database {
                 if($this->conexion->query($sql)){
                     $this->data['status'] =  "success";
                     $this->data['message'] =  "Proyecto agregado";
+
                 } else {
                     $this->data['message'] = "ERROR: No se ejecuto $sql. " . mysqli_error($this->conexion);
                 }

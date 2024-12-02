@@ -71,8 +71,8 @@ if (!isset($_SESSION['user_id'])) {
                     <form id="project-form">
                         <div class="form-group">
                             <fieldset>
-                                <input class="form-control mb-3" type="text" id="name" placeholder="Nombre de proyecto">
-                                <textarea class="form-control mb-3" id="description" placeholder="Detalles del proyecto"></textarea>
+                                <input class="form-control mb-3" type="text" id="name" name="nombre" placeholder="Nombre de proyecto">
+                                <textarea class="form-control mb-3" id="description" name="descripcion" placeholder="Detalles del proyecto"></textarea>
                             </fieldset>                
                         </div>
                         <input type="hidden" id="projectId">
