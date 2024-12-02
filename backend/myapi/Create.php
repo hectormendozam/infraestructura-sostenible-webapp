@@ -5,7 +5,7 @@ use ECOTRACK\MYAPI\Database;
 require_once __DIR__ . '/../../vendor/autoload.php';
 class Create extends Database {
 
-    public function __construct($db, $user='root', $pass='12345678') {
+    public function __construct($db, $user='root', $pass='Capitan23') {
         parent::__construct($user,$pass, $db);
     }
 

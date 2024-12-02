@@ -1,15 +1,64 @@
 <?php
-// Iniciar sesión para acceder a los objetivos guardados
+// Incluir la conexión a la base de datos
+include 'config.php';
 session_start();
 
-// Verificar si hay objetivos en la sesión
-$objetivosSeleccionados = isset($_SESSION['objetivos']) ? $_SESSION['objetivos'] : [];
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['user_id'])) {
+    // Si no está autenticado, redirigir al login
+    header("Location: login.php");
+    exit();
+}
 
-if (empty($objetivosSeleccionados)) {
-    echo "No hay objetivos seleccionados. <a href='objectives.php'>Volver</a>";
-    exit;
+// Obtener el ID del usuario actual
+$user_id = $_SESSION['user_id'];
+
+// Comprobar si el formulario ha sido enviado
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Recoger los datos del formulario
+    $nombreProyecto = $_POST['projectName'];
+    $codigoProyecto = $_POST['projectCode'];
+    $responsable = $_POST['projectManager'];
+    $fechaInicio = $_POST['startDate'];
+    $fechaFin = $_POST['endDate'];
+    $consumoAgua = isset($_POST['waterUsage']) ? $_POST['waterUsage'] : NULL;
+    $costoAgua = isset($_POST['waterCost']) ? $_POST['waterCost'] : NULL;
+    $consumoEnergia = isset($_POST['energyUsage']) ? $_POST['energyUsage'] : NULL;
+    $costoEnergia = isset($_POST['energyCost']) ? $_POST['energyCost'] : NULL;
+    $gastosOperativos = isset($_POST['operationalExpenses']) ? $_POST['operationalExpenses'] : NULL;
+    $presupuesto = isset($_POST['budget']) ? $_POST['budget'] : NULL;
+    $variacionPresupuesto = isset($_POST['budgetVariance']) ? $_POST['budgetVariance'] : NULL;
+    $observaciones = isset($_POST['observations']) ? $_POST['observations'] : NULL;
+
+    // Preparar la consulta para insertar los datos
+    $sql = "INSERT INTO reportes 
+            (user_id, nombre_proyecto, codigo_proyecto, responsable, fecha_inicio, fecha_fin, 
+            consumo_agua, costo_agua, consumo_energia, costo_energia, 
+            gastos_operativos, presupuesto, variacion_presupuesto, observaciones) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param(
+        "issssssdddddds", 
+        $user_id, $nombreProyecto, $codigoProyecto, $responsable, $fechaInicio, $fechaFin, 
+        $consumoAgua, $costoAgua, $consumoEnergia, $costoEnergia, 
+        $gastosOperativos, $presupuesto, $variacionPresupuesto, $observaciones
+    );
+
+    // Ejecutar la consulta y verificar si fue exitosa
+    if ($stmt->execute()) {
+        echo "Reporte guardado con éxito.";
+        header("Location: dashboard.php"); // Redirigir al dashboard o a otra página
+        exit();
+    } else {
+        echo "Error al guardar el reporte: " . $stmt->error;
+    }
+
+    $stmt->close();
+    $conn->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
