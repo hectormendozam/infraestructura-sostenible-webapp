@@ -1,23 +1,13 @@
 <?php
-// Iniciar sesión
+// Iniciar la sesión
 session_start();
 
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['user_id'])) {
+    // Si no está autenticado, redirigir al login
     header("Location: login.html");
     exit();
 }
-
-// Recibir los objetivos seleccionados
-$objetivosSeleccionados = isset($_POST['objetivos']) ? $_POST['objetivos'] : [];
-
-if (empty($objetivosSeleccionados)) {
-    echo "No se seleccionaron objetivos. <a href='objectives.html'>Volver</a>";
-    exit();
-}
-
-// Guardar los objetivos en la sesión
-$_SESSION['objetivos'] = $objetivosSeleccionados;
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +15,7 @@ $_SESSION['objetivos'] = $objetivosSeleccionados;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoTrack - Confirmar Acción</title>
+    <title>EcoTrack - Objetivos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="icon" href="src/img/planeta.png" type="image/x-icon">
@@ -58,36 +48,40 @@ $_SESSION['objetivos'] = $objetivosSeleccionados;
             <h2 class="text-center">EcoTrack</h2>
             <ul class="nav flex-column mt-4">
                 <li class="nav-item mb-2">
-                    <a href="index.html" class="nav-link text-white">Inicio</a>
+                    <a href="index.php" class="nav-link text-white">Inicio</a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="dashboard.html" class="nav-link text-white">Estadísticas</a>
+                    <a href="dashboard.php" class="nav-link text-white">Estadísticas</a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="objectives.html" class="nav-link text-white">Metas y Objetivos</a>
+                    <a href="objectives.php" class="nav-link text-white">Metas y Objetivos</a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="profile.html" class="nav-link text-white">Perfil</a>
+                    <a href="profile.php" class="nav-link text-white">Perfil</a>
                 </li>
                 <li class="nav-item">
-                    <a href="login.html" class="nav-link text-white">Salir</a>
+                    <a href="logout.php" class="nav-link text-white">Salir</a>
                 </li>
             </ul>
         </nav>
 
         <!-- Contenido principal -->
         <div class="flex-grow-1 bg-light d-flex justify-content-center align-items-center flex-column">
-            <div class="container my-5 text-center">
-                <h3>¿Qué deseas hacer?</h3>
-                <p class="my-3">Puedes generar un nuevo reporte en base a los objetivos seleccionados o regresar a la página de objetivos.</p>
-                <div class="d-flex justify-content-center gap-3">
-                    <!-- Botón para generar un nuevo reporte -->
-                    <form action="backend/ingresar_reporte.php" method="post">
-                        <button type="submit" class="btn btn-primary btn-lg">Generar Reporte</button>
-                    </form>
-                    <!-- Botón para volver a la página de objetivos -->
-                    <a href="objectives.html" class="btn btn-secondary btn-lg">Volver a Objetivos</a>
-                </div>
+            <div class="mb-4">
+                <h1 class="text-primary">Metas y Objetivos</h1>
+                <p class="text-secondary text-center">Selecciona una opción para continuar</p>
+            </div>
+            <div class="d-flex gap-4">
+                <!-- Botón de Ingresar Reporte -->
+                <a href="backend/ingresar_reporte.php" class="btn btn-primary btn-lg d-flex align-items-center justify-content-center" style="width: 200px; height: 200px;">
+                    <i class="bi bi-clipboard-data fs-1"></i>
+                    <span class="mt-2">Ingresar Reporte</span>
+                </a>
+                <!-- Botón de Ingresar Objetivos -->
+                <a href="ingresar_objetivos.php" class="btn btn-success btn-lg d-flex align-items-center justify-content-center" style="width: 200px; height: 200px;">
+                    <i class="bi bi-flag fs-1"></i>
+                    <span class="mt-2">Ingresar Objetivos</span>
+                </a>
             </div>
         </div>
     </div>

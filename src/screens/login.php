@@ -3,7 +3,7 @@
 session_start();
 
 // Incluir la conexión a la base de datos
-include '../../backend/config.php';
+include 'config.php';
 
 // Variable para manejar mensajes de error
 $error = "";
