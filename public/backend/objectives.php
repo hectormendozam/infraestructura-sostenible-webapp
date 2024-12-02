@@ -9,5 +9,5 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-include './src/screens/dashboard.html'
+include './objectives.html'
 ?>
