@@ -53,30 +53,30 @@
                 </div>
             </nav>
 
-            <!-- Contenido principal en columnas -->
-            <div class="row">
-                <!-- Columna del formulario -->
-                <div class="col-md-4">
-                    <form id="project-form">
-                        <div class="form-group">
-                            <fieldset>
-                                <input class="form-control mb-3" type="text" id="name" placeholder="Nombre de proyecto">
-                                <textarea class="form-control mb-3" id="description" placeholder="Detalles del proyecto"></textarea>
-                            </fieldset>                
-                        </div>
-                        <input type="hidden" id="projectId">
-                        <button class="btn btn-primary w-100" type="submit">Agregar Proyecto</button>
-                    </form>
+        <!-- Contenido principal en columnas -->
+        <div class="row">
+        <!-- Columna del formulario -->
+        <div class="col-md-4">
+            <form id="project-form">
+                <div class="form-group">
+                    <fieldset>
+                        <input class="form-control mb-3" type="text" id="name" placeholder="Nombre de proyecto">
+                        <textarea class="form-control mb-3" id="description" placeholder="Detalles del proyecto"></textarea>
+                    </fieldset>                
                 </div>
-                
-                <!-- TABLA  -->
-                <div class="col-md-8">
-                    <div class="card my-4 d-none" id="project-result">
-                        <div class="card-body">
-                            <!-- RESULTADO -->
-                            <ul id="container"></ul>
-                        </div>
-                    </div>
+                <input type="hidden" id="projectId">
+                <button class="btn btn-primary w-100" type="submit">Agregar Proyecto</button>
+            </form>
+        </div>
+        
+        <!-- TABLA  -->
+        <div class="col-md-8">
+            <div class="card my-4 d-none" id="project-result">
+            <div class="card-body">
+                <!-- RESULTADO -->
+                <ul id="container"></ul>
+            </div>
+            </div>
 
                     <table class="table table-bordered table-sm">
                         <thead>
