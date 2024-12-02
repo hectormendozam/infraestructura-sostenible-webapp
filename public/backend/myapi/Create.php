@@ -17,12 +17,12 @@ class Create extends Database {
         );
         if(isset($jsonOBJ->name)) {
             // SE ASUME QUE LOS DATOS YA FUERON VALIDADOS ANTES DE ENVIARSE
-            $sql = "SELECT * FROM proyectos WHERE nombre = '{$jsonOBJ->name}' AND eliminado = 0";
+            $sql = "SELECT * FROM proyectos WHERE nombre = '{$jsonOBJ->nombre}' AND eliminado = 0";
             $result = $this->conexion->query($sql);
             
             if ($result->num_rows == 0) {
                 $this->conexion->set_charset("utf8");
-                $sql = "INSERT INTO proyectos VALUES ('{$jsonOBJ->name}', '{$jsonOBJ->description}', 0)";
+                $sql = "INSERT INTO proyectos VALUES (null, '{$jsonOBJ->nombre}', '{$jsonOBJ->descripcion}', 0)";
                 if($this->conexion->query($sql)){
                     $this->data['status'] =  "success";
                     $this->data['message'] =  "Proyecto agregado";

@@ -18,7 +18,7 @@ abstract class Database {
          * NOTA: si la conexión falló $conexion contendrá false
          **/
         if(!$this->conexion) {
-            die('¡Base de datos NO conextada!');
+            die('¡Base de datos NO conectada!');
         }
         /*else {
             echo 'Base de datos encontrada';
