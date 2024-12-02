@@ -1,14 +1,38 @@
 <?php
-// Iniciar sesión para acceder a los objetivos guardados
-session_start();
-
-// Verificar si hay objetivos en la sesión
-$objetivosSeleccionados = isset($_SESSION['objetivos']) ? $_SESSION['objetivos'] : [];
-
-if (empty($objetivosSeleccionados)) {
-    echo "No hay objetivos seleccionados. <a href='../objectives.html'>Volver</a>";
-    exit;
+// Conectar a la base de datos
+$conexion = new mysqli('localhost', 'root', '12345678', 'proyecto_db');
+if ($conexion->connect_error) {
+    die('Error de conexión: ' . $conexion->connect_error);
 }
+
+// Validar si se recibieron datos del formulario
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $tipo = isset($_POST['tipo']) ? $_POST['tipo'] : null;
+    $cantidad = isset($_POST['cantidad']) ? (float) $_POST['cantidad'] : null;
+
+    // Validar los datos recibidos
+    if (!$tipo || !$cantidad || !in_array($tipo, ['agua', 'energia', 'operacion'])) {
+        echo "Datos inválidos. <a href='ingresar_reporte.html'>Volver</a>";
+        exit;
+    }
+
+    // Insertar el reporte en la base de datos
+    $consulta = $conexion->prepare("INSERT INTO reporte (tipo, cantidad) VALUES (?, ?)");
+    $consulta->bind_param('sd', $tipo, $cantidad);
+    if ($consulta->execute()) {
+        echo "<h3>Reporte guardado correctamente</h3>";
+        echo "<a href='dashboard.html'>Ir al Dashboard</a>";
+    } else {
+        echo "Error al guardar el reporte: " . $conexion->error;
+    }
+
+    $consulta->close();
+} else {
+    echo "Método no permitido.";
+}
+
+// Cerrar la conexión
+$conexion->close();
 ?>
 
 <!DOCTYPE html>
