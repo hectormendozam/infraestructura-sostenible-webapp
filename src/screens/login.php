@@ -3,7 +3,7 @@
 session_start();
 
 // Incluir la conexión a la base de datos
-include 'config.php';
+include '../../backend/config.php';
 
 // Variable para manejar mensajes de error
 $error = "";
@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['username'] = $user['username'];
 
             // Redirigir al usuario a una página protegida
-            header("Location: dashboard.php");
+            header("Location: index.php");
             exit();
         } else {
             $error = "Contraseña incorrecta.";
