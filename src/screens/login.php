@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <?php if (!empty($error)): ?>
                     <div class="alert alert-danger"><?php echo $error; ?></div>
                 <?php endif; ?>
-                <form action="" method="POST">
+                <form method="POST">
                     <!-- Nombre de Usuario o Correo Electrónico -->
                     <div class="mb-3">
                         <label for="username" class="form-label">Nombre de Usuario o Correo Electrónico</label>
@@ -82,6 +82,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <button type="submit" class="btn btn-primary">Iniciar sesión</button>
                     </div>
                 </form>
+                <div class="login-a mt-4 d-flex justify-content-center">
+                    <p>¿No tienes una cuenta? <a href="registro.php">Regístrate</a></p>
+                </div>
             </div>
         </div>
     </div>
