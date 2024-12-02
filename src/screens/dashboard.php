@@ -9,7 +9,6 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.html");
     exit();
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -19,14 +18,12 @@ if (!isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EcoTrack - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="icon" href="" type="image/x-icon">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="d-flex">
         <!-- Menú de navegación -->
         <nav class="bg-dark text-white vh-100 p-3" style="width: 250px;">
-            <!-- Imagen del logo arriba del título -->
             <h2 class="text-center">EcoTrack</h2>
             <div class="text-center mb-3">
                 <img src="../img/Ecotrack.png" alt="EcoTrack Logo" style="width: 100px; height: 100px;">
@@ -57,27 +54,32 @@ if (!isset($_SESSION['user_id'])) {
             </div>
             <!-- Gráficas -->
             <div class="row g-3">
+                <!-- Progreso hacia los objetivos -->
                 <div class="col-md-4">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">Costos Totales</h5>
-                            <canvas id="costosChart"></canvas>
+                            <h5 class="card-title">Progreso de Objetivos</h5>
+                            <canvas id="progresoChart"></canvas>
                         </div>
                     </div>
                 </div>
+
+                <!-- Comparación de proyectos -->
                 <div class="col-md-4">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">Consumo de Energía</h5>
-                            <canvas id="energiaChart"></canvas>
+                            <h5 class="card-title">Comparación de Proyectos</h5>
+                            <canvas id="comparacionChart"></canvas>
                         </div>
                     </div>
                 </div>
+
+                <!-- Promedio y tendencia -->
                 <div class="col-md-4">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">Consumo de Agua</h5>
-                            <canvas id="aguaChart"></canvas>
+                            <h5 class="card-title">Promedio y Tendencia</h5>
+                            <canvas id="tendenciaChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -86,65 +88,75 @@ if (!isset($_SESSION['user_id'])) {
     </div>
 
     <script>
-        async function fetchData() {
-            const response = await fetch('../backend/dashboard_data.php');
+        async function fetchStatistics() {
+            const response = await fetch('../backend/statistics_data.php');
             return response.json();
         }
 
-        fetchData().then(data => {
-            // Costos
-            const proyectosCostos = data.costos.map(item => item.proyecto);
-            const valoresCostos = data.costos.map(item => item.costo_total);
+        fetchStatistics().then(data => {
+            // Progreso hacia los objetivos
+            const proyectosProgreso = data.progreso.map(item => item.proyecto);
+            const progresoPorcentaje = data.progreso.map(item => parseFloat(item.progreso || 0).toFixed(2));
 
-            new Chart(document.getElementById('costosChart'), {
+            new Chart(document.getElementById('progresoChart'), {
                 type: 'bar',
                 data: {
-                    labels: proyectosCostos,
+                    labels: proyectosProgreso,
                     datasets: [{
-                        label: 'Costos Totales',
-                        data: valoresCostos,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        label: '% Progreso',
+                        data: progresoPorcentaje,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1
                     }]
                 },
+                options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
+            });
+
+            // Comparación de proyectos
+            const proyectosComparacion = [...new Set(data.comparacion.map(item => item.proyecto))];
+            const tiposComparacion = ['agua', 'energia', 'operacion'];
+            const datasetsComparacion = tiposComparacion.map(tipo => ({
+                label: tipo.charAt(0).toUpperCase() + tipo.slice(1),
+                data: proyectosComparacion.map(proyecto => {
+                    const item = data.comparacion.find(c => c.proyecto === proyecto && c.tipo === tipo);
+                    return item ? item.total : 0;
+                }),
+                backgroundColor: tipo === 'agua' ? 'rgba(75, 192, 192, 0.2)' : tipo === 'energia' ? 'rgba(255, 159, 64, 0.2)' : 'rgba(255, 99, 132, 0.2)',
+                borderColor: tipo === 'agua' ? 'rgba(75, 192, 192, 1)' : tipo === 'energia' ? 'rgba(255, 159, 64, 1)' : 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }));
+
+            new Chart(document.getElementById('comparacionChart'), {
+                type: 'bar',
+                data: {
+                    labels: proyectosComparacion,
+                    datasets: datasetsComparacion
+                },
                 options: { responsive: true, scales: { y: { beginAtZero: true } } }
             });
 
-            // Energía
-            const proyectosEnergia = data.energia.map(item => item.proyecto);
-            const valoresEnergia = data.energia.map(item => item.energia_total);
+            // Promedio y tendencia
+            const tiposTendencia = [...new Set(data.tendencia.map(item => item.tipo))];
+            const labelsTendencia = data.tendencia
+                .filter((v, i, a) => a.findIndex(t => t.mes === v.mes && t.anio === v.anio) === i)
+                .map(item => `${item.mes}/${item.anio}`);
 
-            new Chart(document.getElementById('energiaChart'), {
+            const datasetsTendencia = tiposTendencia.map(tipo => ({
+                label: tipo.charAt(0).toUpperCase() + tipo.slice(1),
+                data: data.tendencia.filter(item => item.tipo === tipo).map(item => item.promedio),
+                borderColor: tipo === 'agua' ? 'rgba(54, 162, 235, 1)' : tipo === 'energia' ? 'rgba(255, 206, 86, 1)' : 'rgba(75, 192, 192, 1)',
+                fill: false,
+                tension: 0.1
+            }));
+
+            new Chart(document.getElementById('tendenciaChart'), {
                 type: 'line',
                 data: {
-                    labels: proyectosEnergia,
-                    datasets: [{
-                        label: 'Consumo de Energía',
-                        data: valoresEnergia,
-                        borderColor: 'rgba(255, 159, 64, 1)',
-                        borderWidth: 2,
-                        fill: false
-                    }]
+                    labels: labelsTendencia,
+                    datasets: datasetsTendencia
                 },
                 options: { responsive: true, scales: { y: { beginAtZero: true } } }
-            });
-
-            // Agua
-            const proyectosAgua = data.agua.map(item => item.proyecto);
-            const valoresAgua = data.agua.map(item => item.agua_total);
-
-            new Chart(document.getElementById('aguaChart'), {
-                type: 'pie',
-                data: {
-                    labels: proyectosAgua,
-                    datasets: [{
-                        label: 'Consumo de Agua',
-                        data: valoresAgua,
-                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-                    }]
-                },
-                options: { responsive: true }
             });
         });
     </script>
