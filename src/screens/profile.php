@@ -6,7 +6,7 @@ session_start();
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['user_id'])) {
     // Si no está autenticado, redirigir al login
-    header("Location: login.html");
+    header("Location: login.php");
     exit();
 }
 
@@ -42,19 +42,19 @@ $conn->close();
             </div>
             <ul class="nav flex-column mt-4">
                 <li class="nav-item mb-2">
-                    <a href="index.html" class="nav-link text-white">Inicio</a>
+                    <a href="index.php" class="nav-link text-white">Inicio</a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="dashboard.html" class="nav-link text-white">Estadísticas</a>
+                    <a href="dashboard.php" class="nav-link text-white">Estadísticas</a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="objectives.html" class="nav-link text-white">Metas y Objetivos</a>
+                    <a href="objectives.php" class="nav-link text-white">Metas y Objetivos</a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="profile.html" class="nav-link text-white">Perfil</a>
+                    <a href="profile.php" class="nav-link text-white">Perfil</a>
                 </li>
                 <li class="nav-item">
-                    <a href="login.html" class="nav-link text-white">Salir</a>
+                    <a href="login.php" class="nav-link text-white">Salir</a>
                 </li>
             </ul>
         </nav>
