@@ -1,64 +1,93 @@
 <?php
-// Incluir la conexión a la base de datos
-include 'config.php';
+// Habilitar la detección de errores
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Iniciar sesión para acceder a los objetivos guardados y al usuario actual
 session_start();
+include 'config.php'; // Archivo con la conexión a la base de datos
+
+// Verificar si hay objetivos en la sesión
+$objetivosSeleccionados = isset($_SESSION['objetivos']) ? $_SESSION['objetivos'] : [];
+if (empty($objetivosSeleccionados)) {
+    echo "No hay objetivos seleccionados. <a href='objectives.php'>Volver</a>";
+    exit;
+}
 
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['user_id'])) {
-    // Si no está autenticado, redirigir al login
-    header("Location: login.php");
-    exit();
+    header('Location: login.php');
+    exit;
 }
 
-// Obtener el ID del usuario actual
-$user_id = $_SESSION['user_id'];
-
-// Comprobar si el formulario ha sido enviado
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Recoger los datos del formulario
-    $nombreProyecto = $_POST['projectName'];
-    $codigoProyecto = $_POST['projectCode'];
-    $responsable = $_POST['projectManager'];
-    $fechaInicio = $_POST['startDate'];
-    $fechaFin = $_POST['endDate'];
-    $consumoAgua = isset($_POST['waterUsage']) ? $_POST['waterUsage'] : NULL;
-    $costoAgua = isset($_POST['waterCost']) ? $_POST['waterCost'] : NULL;
-    $consumoEnergia = isset($_POST['energyUsage']) ? $_POST['energyUsage'] : NULL;
-    $costoEnergia = isset($_POST['energyCost']) ? $_POST['energyCost'] : NULL;
-    $gastosOperativos = isset($_POST['operationalExpenses']) ? $_POST['operationalExpenses'] : NULL;
-    $presupuesto = isset($_POST['budget']) ? $_POST['budget'] : NULL;
-    $variacionPresupuesto = isset($_POST['budgetVariance']) ? $_POST['budgetVariance'] : NULL;
-    $observaciones = isset($_POST['observations']) ? $_POST['observations'] : NULL;
-
-    // Preparar la consulta para insertar los datos
-    $sql = "INSERT INTO reportes 
-            (user_id, nombre_proyecto, codigo_proyecto, responsable, fecha_inicio, fecha_fin, 
-            consumo_agua, costo_agua, consumo_energia, costo_energia, 
-            gastos_operativos, presupuesto, variacion_presupuesto, observaciones) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param(
-        "issssssdddddds", 
-        $user_id, $nombreProyecto, $codigoProyecto, $responsable, $fechaInicio, $fechaFin, 
-        $consumoAgua, $costoAgua, $consumoEnergia, $costoEnergia, 
-        $gastosOperativos, $presupuesto, $variacionPresupuesto, $observaciones
-    );
-
-    // Ejecutar la consulta y verificar si fue exitosa
-    if ($stmt->execute()) {
-        echo "Reporte guardado con éxito.";
-        header("Location: dashboard.php"); // Redirigir al dashboard o a otra página
-        exit();
-    } else {
-        echo "Error al guardar el reporte: " . $stmt->error;
+// Procesar la información si el formulario ha sido enviado
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validar que los campos obligatorios estén presentes
+    $requiredFields = ['projectName', 'projectCode', 'projectManager', 'startDate', 'endDate'];
+    foreach ($requiredFields as $field) {
+        if (empty($_POST[$field])) {
+            $errorMessage = "Por favor completa todos los campos obligatorios.";
+            break;
+        }
     }
 
-    $stmt->close();
-    $conn->close();
+    // Si no hay errores, proceder con la inserción
+    if (!isset($errorMessage)) {
+        $nombreProyecto = $_POST['projectName'];
+        $codigoProyecto = $_POST['projectCode'];
+        $responsable = $_POST['projectManager'];
+        $fechaInicio = $_POST['startDate'];
+        $fechaFin = $_POST['endDate'];
+        $user_id = $_SESSION['user_id'];
+
+        // Otros campos opcionales
+        $waterUsage = $_POST['waterUsage'] ?? null;
+        $waterCost = $_POST['waterCost'] ?? null;
+        $energyUsage = $_POST['energyUsage'] ?? null;
+        $energyCost = $_POST['energyCost'] ?? null;
+        $operationalExpenses = $_POST['operationalExpenses'] ?? null;
+        $budget = $_POST['budget'] ?? null;
+        $budgetVariance = $_POST['budgetVariance'] ?? null;
+        $observations = $_POST['observations'] ?? null;
+
+        // Preparar la consulta
+        $sql = "INSERT INTO reportes (user_id, nombre_proyecto, codigo_proyecto, responsable, fecha_inicio, fecha_fin, 
+                consumo_agua, costo_agua, consumo_energia, costo_energia, gastos_operativos, presupuesto_total, 
+                variacion_presupuesto, observaciones) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param(
+            "isssssdidddsds",
+            $user_id,
+            $nombreProyecto,
+            $codigoProyecto,
+            $responsable,
+            $fechaInicio,
+            $fechaFin,
+            $waterUsage,
+            $waterCost,
+            $energyUsage,
+            $energyCost,
+            $operationalExpenses,
+            $budget,
+            $budgetVariance,
+            $observations
+        );
+
+        if ($stmt->execute()) {
+            $successMessage = "Reporte guardado exitosamente.";
+            header("Location: success.php"); // Redirige a una página de éxito (ajusta según tu proyecto)
+            exit;
+        } else {
+            $errorMessage = "Error al guardar el reporte: " . $stmt->error;
+        }
+
+        $stmt->close();
+        $conn->close();
+    }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -71,9 +100,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="container my-5">
         <h3 class="text-center">Generar Reporte</h3>
-        <form action="guardar_reporte.php" method="post">
-            <input type="hidden" name="objetivosSeleccionados" value="<?php echo implode(',', $objetivosSeleccionados); ?>">
 
+        <!-- Mostrar mensajes de error o éxito -->
+        <?php if (isset($errorMessage)): ?>
+            <div class="alert alert-danger"><?php echo $errorMessage; ?></div>
+        <?php endif; ?>
+
+        <?php if (isset($successMessage)): ?>
+            <div class="alert alert-success"><?php echo $successMessage; ?></div>
+        <?php endif; ?>
+
+        <form action="ingresar_reporte.php" method="post">
             <!-- Información básica del proyecto -->
             <div class="mb-3">
                 <label for="projectName" class="form-label">Nombre del Proyecto</label>
@@ -96,26 +133,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="date" class="form-control" name="endDate" id="endDate" required>
             </div>
 
-            <!-- Mostrar campos según objetivos seleccionados -->
+            <!-- Campos según los objetivos seleccionados -->
             <?php if (in_array('agua', $objetivosSeleccionados)): ?>
                 <div class="mb-3">
                     <label for="waterUsage" class="form-label">Consumo Total de Agua (m³)</label>
-                    <input type="number" class="form-control" name="waterUsage" id="waterUsage" placeholder="Cantidad en m³" required>
+                    <input type="number" class="form-control" name="waterUsage" id="waterUsage" placeholder="Cantidad en m³">
                 </div>
                 <div class="mb-3">
                     <label for="waterCost" class="form-label">Costo Total del Agua ($ MXN)</label>
-                    <input type="number" class="form-control" name="waterCost" id="waterCost" placeholder="Costo en pesos MXN" required>
+                    <input type="number" class="form-control" name="waterCost" id="waterCost" placeholder="Costo en pesos MXN">
                 </div>
             <?php endif; ?>
 
             <?php if (in_array('energia', $objetivosSeleccionados)): ?>
                 <div class="mb-3">
                     <label for="energyUsage" class="form-label">Consumo Energético Total (kWh)</label>
-                    <input type="number" class="form-control" name="energyUsage" id="energyUsage" placeholder="Cantidad en kWh" required>
+                    <input type="number" class="form-control" name="energyUsage" id="energyUsage" placeholder="Cantidad en kWh">
                 </div>
                 <div class="mb-3">
                     <label for="energyCost" class="form-label">Costo Total de Energía ($ MXN)</label>
-                    <input type="number" class="form-control" name="energyCost" id="energyCost" placeholder="Costo en pesos mexicanos" required>
+                    <input type="number" class="form-control" name="energyCost" id="energyCost" placeholder="Costo en pesos mexicanos">
                 </div>
             <?php endif; ?>
 
@@ -126,11 +163,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
                 <div class="mb-3">
                     <label for="budget" class="form-label">Presupuesto Total ($ MXN)</label>
-                    <input type="number" class="form-control" name="budget" id="budget" placeholder="Presupuesto en pesos MXN" required>
+                    <input type="number" class="form-control" name="budget" id="budget" placeholder="Presupuesto en pesos MXN">
                 </div>
                 <div class="mb-3">
                     <label for="budgetVariance" class="form-label">Variación Presupuestaria ($ MXN)</label>
-                    <input type="number" class="form-control" name="budgetVariance" id="budgetVariance" placeholder="Variación en pesos MXN" required>
+                    <input type="number" class="form-control" name="budgetVariance" id="budgetVariance" placeholder="Variación en pesos MXN">
                 </div>
             <?php endif; ?>
 
