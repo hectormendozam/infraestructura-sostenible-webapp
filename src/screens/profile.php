@@ -12,11 +12,11 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 // Obtener los datos del usuario de la base de datos
-$sql = "SELECT username, email, location, company FROM usuarios WHERE id = ?";
+$sql = "SELECT username, email, ubicacion, company FROM usuarios WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
-$stmt->bind_result($username, $email, $location, $company);
+$stmt->bind_result($username, $email, $ubicacion, $company);
 $stmt->fetch();
 $stmt->close();
 $conn->close();
@@ -87,7 +87,7 @@ $conn->close();
                                 </div>
                                 <div class="col-md-6">
                                     <label for="location" class="form-label">Ubicación</label>
-                                    <input type="text" class="form-control" id="location" value="<?php echo htmlspecialchars($location); ?>" readonly>
+                                    <input type="text" class="form-control" id="location" value="<?php echo htmlspecialchars($ubicacion); ?>" readonly>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="role" class="form-label">Empresa</label>
