@@ -143,6 +143,17 @@ $(document).ready(function(){
             edit = true;
         });
         e.preventDefault();
-    });    
+    });
+    
+    document.addEventListener("DOMContentLoaded", () => {
+        // Rellenar campos con datos del usuario
+        if (userData) {
+            document.getElementById("username").value = userData.username;
+            document.getElementById("email").value = userData.email;
+            document.getElementById("location").value = userData.location || "No especificado";
+            document.getElementById("company").value = userData.company || "No especificado";
+        }
+    });
+    
 });
 
