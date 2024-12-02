@@ -1,3 +1,27 @@
+<?php
+include 'config.php';
+// Iniciar la sesión
+session_start();
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['user_id'])) {
+    // Si no está autenticado, redirigir al login
+    header("Location: login.html");
+    exit();
+}
+
+$user = $_SESSION['user'];
+// Obtener los datos del usuario de la base de datos
+$sql = "SELECT username, email, location, company FROM usuarios WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($username, $email, $location, $company);
+$stmt->fetch();
+$stmt->close();
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,6 +66,11 @@
                     <h1>Perfil de Usuario</h1>
                 </div>
 
+                <script>
+                    const userData = <?php echo json_encode($user); ?>;
+                    console.log(userData);
+                </script>
+                
                 <!-- Información del usuario -->
                 <div class="card shadow-sm">
                     <div class="card-body">
@@ -50,19 +79,19 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label for="username" class="form-label">Nombre de Usuario</label>
-                                    <input type="text" class="form-control" id="username" value="username" readonly>
+                                    <input type="text" class="form-control" id="username" value="<?php echo htmlspecialchars($user['username']); ?>" readonly>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="email" class="form-label">Correo Electrónico</label>
-                                    <input type="email" class="form-control" id="email" value="email" readonly>
+                                    <input type="email" class="form-control" id="email" value="<?php echo htmlspecialchars($user['email']); ?>" readonly>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="fullname" class="form-label">Ubicación</label>
-                                    <input type="text" class="form-control" id="location" value="location" readonly>
+                                    <input type="text" class="form-control" id="location" value="<?php echo htmlspecialchars($user['location']); ?>" readonly>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="role" class="form-label">Empresa</label>
-                                    <input type="text" class="form-control" id="company" value="company" readonly>
+                                    <input type="text" class="form-control" id="company" value="<?php echo htmlspecialchars($user['company']); ?>" readonly>
                                 </div>
                             </div>
                             <div class="mt-4">
@@ -80,5 +109,6 @@
     crossorigin="anonymous"></script>
     <!-- Lógica del Frontend -->
     <script src="src/app.js"></script>
+    
 </body>
 </html>
