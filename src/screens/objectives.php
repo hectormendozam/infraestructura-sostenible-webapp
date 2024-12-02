@@ -73,7 +73,7 @@ if (!isset($_SESSION['user_id'])) {
             </div>
             <div class="d-flex gap-4">
                 <!-- Botón de Ingresar Reporte -->
-                <a href="backend/ingresar_reporte.php" class="btn btn-primary btn-lg d-flex align-items-center justify-content-center" style="width: 200px; height: 200px;">
+                <a href="ingresar_reporte.php" class="btn btn-primary btn-lg d-flex align-items-center justify-content-center" style="width: 200px; height: 200px;">
                     <i class="bi bi-clipboard-data fs-1"></i>
                     <span class="mt-2">Ingresar Reporte</span>
                 </a>

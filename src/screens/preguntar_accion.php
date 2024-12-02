@@ -5,6 +5,7 @@ session_start();
 // Recibir los objetivos seleccionados
 $objetivosSeleccionados = isset($_POST['objetivos']) ? $_POST['objetivos'] : [];
 
+// Verificar si hay objetivos seleccionados
 if (empty($objetivosSeleccionados)) {
     echo "No se seleccionaron objetivos. <a href='objectives.php'>Volver</a>";
     exit;
@@ -32,7 +33,7 @@ $_SESSION['objetivos'] = $objetivosSeleccionados;
                 <button type="submit" class="btn btn-primary btn-lg">Generar Reporte</button>
             </form>
             <!-- Botón para volver a la página de objetivos -->
-            <a href="../../src/screens/objectives.html" class="btn btn-secondary btn-lg">Volver a Objetivos</a>
+            <a href="objectives.php" class="btn btn-secondary btn-lg">Volver a Objetivos</a>
         </div>
     </div>
 </body>
