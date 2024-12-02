@@ -88,32 +88,55 @@ $(document).ready(function(){
         }
     });
 
-    $('#project-form').submit(e => {
-        e.preventDefault();
-        // SE AGREGA AL JSON EL NOMBRE DEL PRODUCTO
-        postData['nombre'] = $('#name').val();
-        postData['id'] = $('#productId').val();
-        postData['descripcion'] = $('#description').val();
-        /**
-         * AQUÍ DEBES AGREGAR LAS VALIDACIONES DE LOS DATOS EN EL JSON
-         * --> EN CASO DE NO HABER ERRORES, SE ENVIAR EL PRODUCTO A AGREGAR
-         **/
-
-        const url = edit === false ? './backend/project-add.php' : './backend/project-edit.php';
-        
-        $.post(url, postData, (response) => {
-            console.log(response);
-            // SE OBTIENE EL OBJETO DE DATOS A PARTIR DE UN STRING JSON
-            let respuesta = JSON.parse(response);
-            // SE CREA UNA PLANTILLA PARA CREAR INFORMACIÓN DE LA BARRA DE ESTADO
-            
-            // SE REINICIA EL FORMULARIO
-            $('#name').val('');
-            $('#description').val('');
-            // SE LISTAN TODOS LOS PRODUCTOS
-            listarProyectos();
-            // SE REGRESA LA BANDERA DE EDICIÓN A false
-            edit = false;
+    $(document).ready(function() {
+        // Manejar el envío del formulario
+        $('#project-form').on('submit', function(event) {
+            event.preventDefault();  // Evita que el formulario se envíe de forma tradicional
+    
+            // Recoger los datos del formulario
+            var name = $('#name').val();
+            var description = $('#description').val();
+    
+            // Validar que los campos no estén vacíos
+            if (name === '' || description === '') {
+                alert('Por favor, complete todos los campos.');
+                return;
+            }
+    
+            // Enviar los datos al servidor mediante AJAX
+            $.ajax({
+                url: 'project-add.php',
+                type: 'POST',
+                data: {
+                    nombre: name,
+                    descripcion: description
+                },
+                success: function(response) {
+                    // Manejar la respuesta del servidor
+                    var responseData = JSON.parse(response);  // Asumimos que el servidor devuelve JSON
+    
+                    if (responseData.status === 'success') {
+                        alert(responseData.message);
+                        // Aquí puedes agregar el nuevo proyecto a la tabla sin recargar la página
+                        var newRow = `
+                            <tr>
+                                <td>${responseData.id}</td>
+                                <td>${name}</td>
+                                <td>${description}</td>
+                            </tr>
+                        `;
+                        $('#projects').append(newRow);
+                        // Limpiar el formulario
+                        $('#name').val('');
+                        $('#description').val('');
+                    } else {
+                        alert(responseData.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Hubo un problema al agregar el proyecto.');
+                }
+            });
         });
     });
 
