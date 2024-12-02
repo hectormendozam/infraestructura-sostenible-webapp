@@ -97,7 +97,7 @@ if (!empty($objetivosSeleccionados)) {
                 </div>
             <?php else: ?>
                 <h2 class="text-center text-primary mb-4">Ingresa los Objetivos donde quieres que te ayudemos</h2>
-                <form action="objectives.php" method="post">
+                <form action="preguntar_accion.php" method="post">
                     <!-- Lista de opciones -->
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" name="objetivos[]" value="agua" id="agua">

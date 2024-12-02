@@ -1,3 +1,51 @@
+<?php
+// Iniciar sesión si no está iniciada
+session_start();
+
+// Incluir la conexión a la base de datos
+include 'config.php';
+
+// Variable para manejar mensajes de error
+$error = "";
+
+// Comprobar si el formulario ha sido enviado
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Recoger los datos del formulario
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Buscar el usuario en la base de datos (por nombre de usuario o correo)
+    $sql = "SELECT * FROM usuarios WHERE username = ? OR email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $username, $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        // Si el usuario existe, obtener sus datos
+        $user = $result->fetch_assoc();
+
+        // Verificar si la contraseña es correcta
+        if (password_verify($password, $user['password'])) {
+            // Crear variables de sesión
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+
+            // Redirigir al usuario a una página protegida
+            header("Location: index.php");
+            exit();
+        } else {
+            $error = "Contraseña incorrecta.";
+        }
+    } else {
+        $error = "El usuario no existe.";
+    }
+
+    $stmt->close();
+    $conn->close();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -13,7 +61,10 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <h3 class="text-center mb-4">Iniciar sesión</h3>
-                <form action="../../backend/login.php" method="POST">
+                <?php if (!empty($error)): ?>
+                    <div class="alert alert-danger"><?php echo $error; ?></div>
+                <?php endif; ?>
+                <form action="" method="POST">
                     <!-- Nombre de Usuario o Correo Electrónico -->
                     <div class="mb-3">
                         <label for="username" class="form-label">Nombre de Usuario o Correo Electrónico</label>
@@ -31,7 +82,6 @@
                         <button type="submit" class="btn btn-primary">Iniciar sesión</button>
                     </div>
                 </form>
-         
             </div>
         </div>
     </div>
@@ -40,5 +90,3 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-
