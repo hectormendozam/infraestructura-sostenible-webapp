@@ -19,6 +19,46 @@ if (!isset($_SESSION['user_id'])) {
     <title>EcoTrack - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        #notificationIcon {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            color: #fff;
+            cursor: pointer;
+        }
+        #notificationIcon:hover {
+            color: #ffc107;
+        }
+        #notificationPanel {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 300px;
+            z-index: 1000;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #notificationPanel ul {
+            list-style: none;
+            margin: 0;
+            padding: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        #notificationPanel ul li {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        #notificationPanel ul li:last-child {
+            border-bottom: none;
+        }
+    </style>
 </head>
 <body>
     <div class="d-flex">
@@ -49,12 +89,19 @@ if (!isset($_SESSION['user_id'])) {
 
         <div class="flex-grow-1 bg-light p-4">
             <!-- Encabezado -->
-            <div class="bg-primary text-white rounded p-3 mb-4 text-center">
+            <div class="bg-primary text-white rounded p-3 mb-4 text-center position-relative">
                 <h1>Bienvenido al Dashboard</h1>
+                <!-- Icono de notificaciones -->
+                <i id="notificationIcon" class="fas fa-bell"></i>
+                <!-- Panel de notificaciones -->
+                <div id="notificationPanel">
+                    <h5 class="text-center mt-2">Notificaciones</h5>
+                    <ul id="notificacionesLista" class="list-group"></ul>
+                </div>
             </div>
             <!-- Gráficas -->
             <div class="row g-3">
-                <!-- Progreso hacia los objetivos -->
+                <!-- Aquí irían las gráficas del dashboard -->
                 <div class="col-md-4">
                     <div class="card shadow-sm">
                         <div class="card-body">
@@ -63,8 +110,6 @@ if (!isset($_SESSION['user_id'])) {
                         </div>
                     </div>
                 </div>
-
-                <!-- Comparación de proyectos -->
                 <div class="col-md-4">
                     <div class="card shadow-sm">
                         <div class="card-body">
@@ -73,8 +118,6 @@ if (!isset($_SESSION['user_id'])) {
                         </div>
                     </div>
                 </div>
-
-                <!-- Promedio y tendencia -->
                 <div class="col-md-4">
                     <div class="card shadow-sm">
                         <div class="card-body">
@@ -88,76 +131,35 @@ if (!isset($_SESSION['user_id'])) {
     </div>
 
     <script>
-        async function fetchStatistics() {
-            const response = await fetch('../backend/statistics_data.php');
+        // Mostrar/ocultar el panel de notificaciones
+        document.getElementById('notificationIcon').addEventListener('click', () => {
+            const panel = document.getElementById('notificationPanel');
+            panel.style.display = panel.style.display === 'none' || panel.style.display === '' ? 'block' : 'none';
+        });
+
+        // Obtener notificaciones desde el backend
+        async function fetchNotificaciones() {
+            const response = await fetch('../backend/get_notifications.php');
             return response.json();
         }
 
-        fetchStatistics().then(data => {
-            // Progreso hacia los objetivos
-            const proyectosProgreso = data.progreso.map(item => item.proyecto);
-            const progresoPorcentaje = data.progreso.map(item => parseFloat(item.progreso || 0).toFixed(2));
+        fetchNotificaciones().then(data => {
+            const notificacionesLista = document.getElementById('notificacionesLista');
+            notificacionesLista.innerHTML = '';
 
-            new Chart(document.getElementById('progresoChart'), {
-                type: 'bar',
-                data: {
-                    labels: proyectosProgreso,
-                    datasets: [{
-                        label: '% Progreso',
-                        data: progresoPorcentaje,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
-            });
-
-            // Comparación de proyectos
-            const proyectosComparacion = [...new Set(data.comparacion.map(item => item.proyecto))];
-            const tiposComparacion = ['agua', 'energia', 'operacion'];
-            const datasetsComparacion = tiposComparacion.map(tipo => ({
-                label: tipo.charAt(0).toUpperCase() + tipo.slice(1),
-                data: proyectosComparacion.map(proyecto => {
-                    const item = data.comparacion.find(c => c.proyecto === proyecto && c.tipo === tipo);
-                    return item ? item.total : 0;
-                }),
-                backgroundColor: tipo === 'agua' ? 'rgba(75, 192, 192, 0.2)' : tipo === 'energia' ? 'rgba(255, 159, 64, 0.2)' : 'rgba(255, 99, 132, 0.2)',
-                borderColor: tipo === 'agua' ? 'rgba(75, 192, 192, 1)' : tipo === 'energia' ? 'rgba(255, 159, 64, 1)' : 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-            }));
-
-            new Chart(document.getElementById('comparacionChart'), {
-                type: 'bar',
-                data: {
-                    labels: proyectosComparacion,
-                    datasets: datasetsComparacion
-                },
-                options: { responsive: true, scales: { y: { beginAtZero: true } } }
-            });
-
-            // Promedio y tendencia
-            const tiposTendencia = [...new Set(data.tendencia.map(item => item.tipo))];
-            const labelsTendencia = data.tendencia
-                .filter((v, i, a) => a.findIndex(t => t.mes === v.mes && t.anio === v.anio) === i)
-                .map(item => `${item.mes}/${item.anio}`);
-
-            const datasetsTendencia = tiposTendencia.map(tipo => ({
-                label: tipo.charAt(0).toUpperCase() + tipo.slice(1),
-                data: data.tendencia.filter(item => item.tipo === tipo).map(item => item.promedio),
-                borderColor: tipo === 'agua' ? 'rgba(54, 162, 235, 1)' : tipo === 'energia' ? 'rgba(255, 206, 86, 1)' : 'rgba(75, 192, 192, 1)',
-                fill: false,
-                tension: 0.1
-            }));
-
-            new Chart(document.getElementById('tendenciaChart'), {
-                type: 'line',
-                data: {
-                    labels: labelsTendencia,
-                    datasets: datasetsTendencia
-                },
-                options: { responsive: true, scales: { y: { beginAtZero: true } } }
-            });
+            if (data.length > 0) {
+                data.forEach(n => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.textContent = `${n.fecha}: ${n.mensaje}`;
+                    notificacionesLista.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.className = 'list-group-item text-muted';
+                li.textContent = 'No hay notificaciones.';
+                notificacionesLista.appendChild(li);
+            }
         });
     </script>
 </body>
