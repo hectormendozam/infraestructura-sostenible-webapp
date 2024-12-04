@@ -76,6 +76,7 @@ if (!isset($_SESSION['user_id'])) {
                             </fieldset>                
                         </div>
                         <input type="hidden" id="projectId">
+                        <input type="hidden" id="user_id" value="<?php echo $_SESSION['user_id'] ?? ''; ?>">
                         <button class="btn btn-primary w-100" type="submit">Agregar Proyecto</button>
                     </form>
                 </div>

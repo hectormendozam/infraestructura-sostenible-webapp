@@ -1,6 +1,9 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 // Conectar a la base de datos
-include 'config.php';
+include '../screens/config.php';
 session_start();
 
 // Verificar si el usuario está autenticado

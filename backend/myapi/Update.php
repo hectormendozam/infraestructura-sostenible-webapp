@@ -1,8 +1,9 @@
 <?php
-namespace ECOTRACK\MYAPI\Update;
+namespace Backend\MYAPI;
 
-use ECOTRACK\MYAPI\Database;
-require_once __DIR__ . '/../../vendor/autoload.php';
+use Backend\MYAPI\Database;
+require_once __DIR__ .'/Database.php';
+
 class Update extends Database {
 
     public function __construct($db, $user='root', $pass='12345678') {

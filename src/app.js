@@ -3,45 +3,46 @@ $(document).ready(function(){
 
     listarProyectos();
 
-    // Manejar el envío del formulario
-    $('#project-form').on('submit', function(event) {
-        event.preventDefault(); // Evitar el envío normal del formulario
-
-        // Recoger los datos del formulario
-        const nombre = $('#name').val();
-        const descripcion = $('#description').val();
-
-        if (!nombre || !descripcion) {
-            alert('Por favor, completa todos los campos.');
-            return;
-        }
-
-        // Enviar los datos mediante AJAX
-        $.ajax({
-            url: '../backend/project-add.php',
-            type: 'POST',
-            data: { nombre: nombre, descripcion: descripcion },
-            success: function(response) {
-                const data = JSON.parse(response);
-
-                if (data.status === 'success') {
-                    alert(data.message);
-                    $('#project-form')[0].reset(); // Limpiar formulario
-                    listarProyectos(); // Actualizar la lista de proyectos
-                } else {
-                    alert(data.message);
-                }
-            },
-            error: function() {
-                alert('Error al procesar la solicitud.');
+        // Manejar el envío del formulario
+        /*$('#project-form').on('submit', function(event) {
+            event.preventDefault(); // Evitar el envío normal del formulario
+    
+            // Recoger los datos del formulario
+            const nombre = $('#name').val();
+            const descripcion = $('#description').val();
+    
+            if (!nombre || !descripcion) {
+                alert('Por favor, completa todos los campos.');
+                return;
             }
-        });
-    });
+    
+            // Enviar los datos mediante AJAX
+            $.ajax({
+                url: '../backend/project-add.php',
+                type: 'POST',
+                data: { nombre: nombre, descripcion: descripcion },
+                success: function(response) {
+                    const data = JSON.parse(response);
+    
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        $('#project-form')[0].reset(); // Limpiar formulario
+                        listarProyectos(); // Actualizar la lista de proyectos
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function() {
+                    alert('Error al procesar la solicitud.');
+                }
+            });
+        });*/
+    
 
     // Función para listar proyectos
     function listarProyectos() {
         $.ajax({
-            url: '../backend/project-list.php',
+            url: '../../backend/project-list.php',
             type: 'GET',
             success: function(response) {
                 const projects = JSON.parse(response);
@@ -78,27 +79,26 @@ $(document).ready(function(){
         if($('#search').val()) {
             let search = $('#search').val();
             $.ajax({
-                url: './backend/project-search.php?search='+$('#search').val(),
+                url: '../../backend/project-search.php?search='+$('#search').val(),
                 data: {search},
                 type: 'GET',
                 success: function (response) {
                     if(!response.error) {
                         // SE OBTIENE EL OBJETO DE DATOS A PARTIR DE UN STRING JSON
-                        const proyectos = JSON.parse(response);
+                        const projects = JSON.parse(response);
                         
                         // SE VERIFICA SI EL OBJETO JSON TIENE DATOS
-                        if(Object.keys(proyectos).length > 0) {
+                        if(Object.keys(projects).length > 0) {
                             // SE CREA UNA PLANTILLA PARA CREAR LAS FILAS A INSERTAR EN EL DOCUMENTO HTML
                             let template = '';
 
-                            proyectos.forEach(proyecto => {
+                            projects.forEach(project => {
                             
                                 template += `
-                                    <tr productId="${producto.id}">
-                                        <td>${producto.id}</td>
-                                        <td><a href="#" class="product-item">${producto.nombre}</a></td>
-                                        <td><ul>${proyecto.descripcion}</ul></td>
-                                        <td>
+                                    <tr projectId="${project.id}">
+                                        <td>${project.id}</td>
+                                        <td>${project.nombre}</td>
+                                        <td>${project.descripcion}</td>
                                             <button class="project-delete btn btn-danger">
                                                 Eliminar
                                             </button>
@@ -125,6 +125,9 @@ $(document).ready(function(){
     
         let name = $('#name').val().trim();
         let description = $('#description').val().trim();
+        let user_id = $('#user_id').val();
+
+
     
         if (!name || !description) {
             alert('Por favor, completa todos los campos.');
@@ -132,9 +135,9 @@ $(document).ready(function(){
         }
     
         $.ajax({
-            url: '../docs/add-project.php',
+            url: '../../backend/project-add.php',
             type: 'POST',
-            data: { name, description },
+            data: { name, description, user_id},
             success: function (response) {
                 try {
                     const jsonResponse = JSON.parse(response);
@@ -159,7 +162,7 @@ $(document).ready(function(){
         if(confirm('¿Realmente deseas eliminar el proyecto?')) {
             const element = $(this)[0].activeElement.parentElement.parentElement;
             const id = $(element).attr('projectId');
-            $.post('./backend/project-delete.php', {id}, (response) => {
+            $.post('../../backend/project-delete.php', {id}, (response) => {
                 listarProductos();
             });
         }
@@ -168,7 +171,7 @@ $(document).ready(function(){
     $(document).on('click', '.project-item', (e) => {
         const element = $(this)[0].activeElement.parentElement.parentElement;
         const id = $(element).attr('projectId');
-        $.post('./backend/project-single.php', {id}, (response) => {
+        $.post('../../backend/project-single.php', {id}, (response) => {
             // SE CONVIERTE A OBJETO EL JSON OBTENIDO
             let project = JSON.parse(response);
             // SE INSERTAN LOS DATOS ESPECIALES EN LOS CAMPOS CORRESPONDIENTES

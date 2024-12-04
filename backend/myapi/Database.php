@@ -1,5 +1,5 @@
 <?php
-namespace ECOTRACK\MYAPI;
+namespace Backend\MYAPI;
 
 abstract class Database {
     protected $conexion;

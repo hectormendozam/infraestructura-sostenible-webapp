@@ -1,8 +1,12 @@
 <?php
-    use ECOTRACK\MYAPI\Create;
-    require_once __DIR__.'/vendor/autoload.php';
+    use Backend\MYAPI\Create as Create;
 
-    $proyectos = new Create('proyecto_db');
-    $proyectos->add( json_decode( json_encode($_POST) ) );
-    echo json_encode($proyectos->getData());
+    require_once __DIR__.'/MYAPI/Create.php';
+
+    $productos = new Create('proyecto_db');
+    //$productos = new Create('job_review');
+    $post = file_get_contents('php://input');
+    $jsonOBJ = json_decode($post);
+    $productos->add( $jsonOBJ );
+    echo $productos->getData();
 ?>
