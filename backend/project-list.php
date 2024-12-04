@@ -1,7 +1,7 @@
 <?php
-    use ECOTRACK\MYAPI\Read;
+    use ECOTRACK\MYAPI\Read as Read;
 
-    require_once __DIR__.'/vendor/autoload.php';
+    require_once __DIR__.'/API/Read.php';
 
     $proyectos = new Read('proyecto_db');
     $proyectos->list();

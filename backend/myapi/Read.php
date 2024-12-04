@@ -10,25 +10,24 @@ class Read extends Database {
     }
 
     public function list() {
-        // SE REALIZA LA QUERY DE BÚSQUEDA Y AL MISMO TIEMPO SE VALIDA SI HUBO RESULTADOS
-        if ( $result = $this->conexion->query("SELECT * FROM proyectos WHERE eliminado = 0") ) {
-            // SE OBTIENEN LOS RESULTADOS
-            $rows = $result->fetch_all(MYSQLI_ASSOC);
+            // Obtener proyectos del usuario autenticado
+            $user_id = $_SESSION['user_id'];
+            $sql = "SELECT id, nombre, descripcion FROM proyectos WHERE usuario_id = ? AND eliminado = 0";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-            if(!is_null($rows)) {
-                // SE CODIFICAN A UTF-8 LOS DATOS Y SE MAPEAN AL ARREGLO DE RESPUESTA
-                foreach($rows as $num => $row) {
-                    foreach($row as $key => $value) {
-                        $this->data[$num][$key] = $value;
-                    }
-                }
+            $projects = [];
+            while ($row = $result->fetch_assoc()) {
+                $projects[] = $row;
             }
-            $result->free();
-        } else {
-            die('Query Error: '.mysqli_error($this->conexion));
+
+            echo json_encode($projects);
+
+            $stmt->close();
+            $conn->close();
         }
-        $this->conexion->close();
-    }
 
     public function search($search) {
         // SE VERIFICA HABER RECIBIDO EL ID

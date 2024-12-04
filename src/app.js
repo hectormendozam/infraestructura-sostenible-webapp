@@ -1,46 +1,78 @@
 $(document).ready(function(){
     let edit = false;
 
-    let JsonString = JSON.stringify(baseJSON,null,2);
-    $('#description').val(JsonString);
-    $('#project-result').hide();
     listarProyectos();
 
+    // Manejar el envío del formulario
+    $('#project-form').on('submit', function(event) {
+        event.preventDefault(); // Evitar el envío normal del formulario
+
+        // Recoger los datos del formulario
+        const nombre = $('#name').val();
+        const descripcion = $('#description').val();
+
+        if (!nombre || !descripcion) {
+            alert('Por favor, completa todos los campos.');
+            return;
+        }
+
+        // Enviar los datos mediante AJAX
+        $.ajax({
+            url: '../backend/project-add.php',
+            type: 'POST',
+            data: { nombre: nombre, descripcion: descripcion },
+            success: function(response) {
+                const data = JSON.parse(response);
+
+                if (data.status === 'success') {
+                    alert(data.message);
+                    $('#project-form')[0].reset(); // Limpiar formulario
+                    listarProyectos(); // Actualizar la lista de proyectos
+                } else {
+                    alert(data.message);
+                }
+            },
+            error: function() {
+                alert('Error al procesar la solicitud.');
+            }
+        });
+    });
+
+    // Función para listar proyectos
     function listarProyectos() {
         $.ajax({
-            url: './backend/project-list.php',
+            url: '../backend/project-list.php',
             type: 'GET',
             success: function(response) {
-                console.log(response);
-                // SE OBTIENE EL OBJETO DE DATOS A PARTIR DE UN STRING JSON
-                const proyectos = JSON.parse(response);
-            
-                // SE VERIFICA SI EL OBJETO JSON TIENE DATOS
-                if(Object.keys(proyectos).length > 0) {
-                    // SE CREA UNA PLANTILLA PARA CREAR LAS FILAS A INSERTAR EN EL DOCUMENTO HTML
-                    let template = '';
+                const projects = JSON.parse(response);
 
-                    proyectos.forEach(producto => {
-                        // SE CREA UNA LISTA HTML CON LA DESCRIPCIÓN DEL PRODUCT   
+                if (projects.length > 0) {
+                    let template = '';
+                    projects.forEach(project => {
                         template += `
-                            <tr productId="${proyecto.id}">
-                                <td>${producto.id}</td>
-                                <td><a href="#" class="project-item">${proyecto.nombre}</a></td>
-                                <td><ul>${descripcion}</ul></td>
-                                <td>
-                                    <button class="project-delete btn btn-danger">
-                                        Eliminar
-                                    </button>
-                                </td>
-                            </tr>
+                            <tr>
+                                <td>${project.id}</td>
+                                <td>${project.nombre}</td>
+                                <td>${project.descripcion}</td>
+                            <td>
+                                <button class="project-delete btn btn-danger">
+                                    Eliminar
+                                </button>
+                            </td>
+                        </tr>
                         `;
                     });
-                    // SE INSERTA LA PLANTILLA EN EL ELEMENTO CON ID "productos"
-                    $('#proyectos').html(template);
+                    $('#projects').html(template);
+                } else {
+                    $('#projects').html('<tr><td colspan="3">No hay proyectos registrados.</td></tr>');
                 }
+            },
+            error: function() {
+                alert('Error al cargar los proyectos.');
             }
         });
     }
+
 
     $('#search').keyup(function() {
         if($('#search').val()) {
@@ -88,56 +120,38 @@ $(document).ready(function(){
         }
     });
 
-    $(document).ready(function() {
-        // Manejar el envío del formulario
-        $('#project-form').on('submit', function(event) {
-            event.preventDefault();  // Evita que el formulario se envíe de forma tradicional
+    $('#project-form').submit(function (e) {
+        e.preventDefault();
     
-            // Recoger los datos del formulario
-            var name = $('#name').val();
-            var description = $('#description').val();
+        let name = $('#name').val().trim();
+        let description = $('#description').val().trim();
     
-            // Validar que los campos no estén vacíos
-            if (name === '' || description === '') {
-                alert('Por favor, complete todos los campos.');
-                return;
-            }
+        if (!name || !description) {
+            alert('Por favor, completa todos los campos.');
+            return;
+        }
     
-            // Enviar los datos al servidor mediante AJAX
-            $.ajax({
-                url: 'project-add.php',
-                type: 'POST',
-                data: {
-                    nombre: name,
-                    descripcion: description
-                },
-                success: function(response) {
-                    console.log(response);
-                    // Manejar la respuesta del servidor
-                    var responseData = JSON.parse(response);  // Asumimos que el servidor devuelve JSON
-    
-                    if (responseData.status === 'success') {
-                        alert(responseData.message);
-                        // Aquí puedes agregar el nuevo proyecto a la tabla sin recargar la página
-                        var newRow = `
-                            <tr>
-                                <td>${responseData.id}</td>
-                                <td>${name}</td>
-                                <td>${description}</td>
-                            </tr>
-                        `;
-                        $('#projects').append(newRow);
-                        // Limpiar el formulario
-                        $('#name').val('');
-                        $('#description').val('');
+        $.ajax({
+            url: '../docs/add-project.php',
+            type: 'POST',
+            data: { name, description },
+            success: function (response) {
+                try {
+                    const jsonResponse = JSON.parse(response);
+                    if (jsonResponse.status === 'success') {
+                        alert('Proyecto agregado correctamente');
+                        listarProyectos();
                     } else {
-                        alert(responseData.message);
+                        alert('Error: ' + jsonResponse.message);
                     }
-                },
-                error: function(xhr, status, error) {
-                    alert('Hubo un problema al agregar el proyecto.');
+                } catch (e) {
+                    console.error('Error de JSON:', e, response);
+                    alert('Error inesperado en el servidor.');
                 }
-            });
+            },
+            error: function () {
+                alert('Error al comunicarse con el servidor.');
+            }
         });
     });
 
