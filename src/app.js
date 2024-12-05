@@ -159,7 +159,7 @@ $(document).ready(function(){
             const element = $(this)[0].activeElement.parentElement.parentElement;
             const id = $(element).attr('projectId');
             $.post('../../backend/project-delete.php', {id}, (response) => {
-                listarProductos();
+                listarProyectos();
             });
         }
     });

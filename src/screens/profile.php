@@ -95,7 +95,7 @@ $conn->close();
                                 </div>
                             </div>
                             <div class="mt-4">
-                                <button type="button" class="btn btn-primary" id="editProfile">Editar Perfil</button>
+                                <button type="button" class="btn btn-primary" id="editProfile"> <a href="edit_profile.php" class="nav-link text-white">Editar Perfil</a></button>
                             </div>
                         </form>
                     </div>
