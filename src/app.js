@@ -51,7 +51,7 @@ $(document).ready(function(){
                     let template = '';
                     projects.forEach(project => {
                         template += `
-                            <tr>
+                            <tr projectId="${project.id}">
                                 <td>${project.id}</td>
                                 <td>${project.nombre}</td>
                                 <td>${project.descripcion}</td>
@@ -63,7 +63,7 @@ $(document).ready(function(){
                         </tr>
                         `;
                     });
-                    $('#projects').html(template);
+                    $('#projects').append(template);
                 } else {
                     $('#projects').html('<tr><td colspan="3">No hay proyectos registrados.</td></tr>');
                 }
@@ -156,10 +156,20 @@ $(document).ready(function(){
 
     $(document).on('click', '.project-delete', (e) => {
         if(confirm('¿Realmente deseas eliminar el proyecto?')) {
-            const element = $(this)[0].activeElement.parentElement.parentElement;
+            const element = $(e.currentTarget).closest('tr'); 
             const id = $(element).attr('projectId');
-            $.post('../../backend/project-delete.php', {id}, (response) => {
-                listarProyectos();
+            $.ajax({
+                url: '../../backend/project-delete.php',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ id: id }),
+                success: function(response) {
+                    console.log("Respuesta del servidor:", response);
+                    listarProyectos();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error AJAX:', status, error);
+                }
             });
         }
     });
@@ -187,7 +197,7 @@ $(document).ready(function(){
         if (userData) {
             document.getElementById("username").value = userData.username;
             document.getElementById("email").value = userData.email;
-            document.getElementById("location").value = userData.location || "No especificado";
+            document.getElementById("ubicacion").value = userData.ubicacion || "No especificado";
             document.getElementById("company").value = userData.company || "No especificado";
         }
     });

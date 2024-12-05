@@ -17,9 +17,12 @@ class Delete extends Database {
             'message' => 'La consulta falló'
         );
         // SE VERIFICA HABER RECIBIDO EL ID
-        if( isset($id) ) {
+        if (isset($id) && is_numeric($id)) {
+            // SANITIZAMOS EL ID PARA EVITAR INYECCIÓN SQL
+            $id = $this->conexion->real_escape_string($id);
+
             // SE REALIZA LA QUERY DE BÚSQUEDA Y AL MISMO TIEMPO SE VALIDA SI HUBO RESULTADOS
-            $sql = "UPDATE proyectos SET eliminado= 1 WHERE id = {$id}";
+            $sql = "UPDATE proyectos SET eliminado = 1 WHERE id = {$id}";
             if ( $this->conexion->query($sql) ) {
                 $this->data['status'] =  "success";
                 $this->data['message'] =  "Proyecto eliminado";
@@ -28,6 +31,7 @@ class Delete extends Database {
             }
             $this->conexion->close();
         } 
+        return json_encode($this->data);
     }
 }	
 ?>
