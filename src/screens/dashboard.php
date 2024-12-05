@@ -84,7 +84,7 @@ if (!isset($_SESSION['user_id'])) {
                     <a href="profile.php" class="nav-link text-white">Perfil</a>
                 </li>
                 <li class="nav-item">
-                    <a href="login.php" class="nav-link text-white">Salir</a>
+                    <a href="logout.php" class="nav-link text-white">Salir</a>
                 </li>
             </ul>
         </nav>
@@ -103,28 +103,11 @@ if (!isset($_SESSION['user_id'])) {
             </div>
             <!-- Gráficas -->
             <div class="row g-3">
-                <!-- Aquí irían las gráficas del dashboard -->
                 <div class="col-md-4">
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title">Progreso de Objetivos</h5>
                             <canvas id="progresoChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Comparación de Proyectos</h5>
-                            <canvas id="comparacionChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">Promedio y Tendencia</h5>
-                            <canvas id="tendenciaChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -162,6 +145,53 @@ if (!isset($_SESSION['user_id'])) {
                 li.textContent = 'No hay notificaciones.';
                 notificacionesLista.appendChild(li);
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('progresoChart').getContext('2d');
+
+            async function fetchProgresoObjetivos() {
+                const response = await fetch('../backend/get_reportes_progreso.php');
+                return response.json();
+            }
+
+            fetchProgresoObjetivos().then(data => {
+                const labels = data.map(d => d.objetivo);
+                const valores = data.map(d => d.valor);
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Progreso de Objetivos',
+                            data: valores,
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.6)', // Agua
+                                'rgba(255, 206, 86, 0.6)', // Costo de Agua
+                                'rgba(75, 192, 192, 0.6)', // Energía
+                                'rgba(153, 102, 255, 0.6)' // Operativos
+                            ],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }).catch(err => {
+                console.error('Error al cargar el progreso de objetivos:', err);
+            });
         });
     </script>
 </body>
