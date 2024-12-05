@@ -151,7 +151,7 @@ if (!isset($_SESSION['user_id'])) {
             const ctx = document.getElementById('progresoChart').getContext('2d');
 
             async function fetchProgresoObjetivos() {
-                const response = await fetch('../backend/get_reportes_progreso.php');
+                const response = await fetch('get_reportes_progreso.php');
                 return response.json();
             }
 
