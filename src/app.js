@@ -126,9 +126,7 @@ $(document).ready(function(){
         let name = $('#name').val().trim();
         let description = $('#description').val().trim();
         let user_id = $('#user_id').val();
-
-
-    
+        
         if (!name || !description) {
             alert('Por favor, completa todos los campos.');
             return;
@@ -137,22 +135,20 @@ $(document).ready(function(){
         $.ajax({
             url: '../../backend/project-add.php',
             type: 'POST',
-            data: { name, description, user_id},
+            contentType: 'application/json',
+            data: JSON.stringify({ name, description, user_id }),
             success: function (response) {
-                try {
-                    const jsonResponse = JSON.parse(response);
-                    if (jsonResponse.status === 'success') {
-                        alert('Proyecto agregado correctamente');
-                        listarProyectos();
-                    } else {
-                        alert('Error: ' + jsonResponse.message);
-                    }
-                } catch (e) {
-                    console.error('Error de JSON:', e, response);
-                    alert('Error inesperado en el servidor.');
+                console.log("Respuesta del servidor:", response);
+                // La respuesta ya es un objeto, no necesitas JSON.parse()
+                if (response.status === 'success') {
+                    alert('Proyecto agregado correctamente');
+                    listarProyectos();
+                } else {
+                    alert('Error: ' + response.message);
                 }
             },
-            error: function () {
+            error: function (xhr, status, error) {
+                console.error('Error AJAX:', status, error);
                 alert('Error al comunicarse con el servidor.');
             }
         });
