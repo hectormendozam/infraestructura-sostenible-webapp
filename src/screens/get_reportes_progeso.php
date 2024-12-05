@@ -17,17 +17,20 @@ $user_id = $_SESSION['user_id'];
 // Obtener los datos de los reportes
 $sql = "
     SELECT 
-        CASE 
-            WHEN water_usage IS NOT NULL THEN 'Agua'
-            WHEN energy_usage IS NOT NULL THEN 'Energía'
-            WHEN operational_expenses IS NOT NULL THEN 'Operación'
-        END AS objetivo,
-        COALESCE(water_usage, energy_usage, operational_expenses) AS valor
-    FROM reportes
-    WHERE usuario_id = ?";
+        'Consumo de Agua' AS objetivo, SUM(consumo_agua) AS valor FROM reportes WHERE user_id = ? AND consumo_agua IS NOT NULL
+    UNION ALL
+    SELECT 
+        'Costo de Agua', SUM(costo_agua) FROM reportes WHERE user_id = ? AND costo_agua IS NOT NULL
+    UNION ALL
+    SELECT 
+        'Consumo de Energía', SUM(consumo_energia) FROM reportes WHERE user_id = ? AND consumo_energia IS NOT NULL
+    UNION ALL
+    SELECT 
+        'Gastos Operativos', SUM(gastos_operativos) FROM reportes WHERE user_id = ? AND gastos_operativos IS NOT NULL
+";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $user_id);
+$stmt->bind_param("iiii", $user_id, $user_id, $user_id, $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
