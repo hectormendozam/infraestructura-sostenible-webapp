@@ -4,9 +4,15 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Iniciar sesión para acceder a los objetivos guardados y al usuario actual
+// Iniciar sesión
 session_start();
 include 'config.php'; // Archivo con la conexión a la base de datos
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit;
+}
 
 // Verificar si hay objetivos en la sesión
 $objetivosSeleccionados = isset($_SESSION['objetivos']) ? $_SESSION['objetivos'] : [];
@@ -15,78 +21,15 @@ if (empty($objetivosSeleccionados)) {
     exit;
 }
 
-// Verificar si el usuario está autenticado
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit;
-}
-
-// Procesar la información si el formulario ha sido enviado
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validar que los campos obligatorios estén presentes
-    $requiredFields = ['projectName', 'projectCode', 'projectManager', 'startDate', 'endDate'];
-    foreach ($requiredFields as $field) {
-        if (empty($_POST[$field])) {
-            $errorMessage = "Por favor completa todos los campos obligatorios.";
-            break;
-        }
-    }
-
-    // Si no hay errores, proceder con la inserción
-    if (!isset($errorMessage)) {
-        $nombreProyecto = $_POST['projectName'];
-        $codigoProyecto = $_POST['projectCode'];
-        $responsable = $_POST['projectManager'];
-        $fechaInicio = $_POST['startDate'];
-        $fechaFin = $_POST['endDate'];
-        $user_id = $_SESSION['user_id'];
-
-        // Otros campos opcionales
-        $waterUsage = $_POST['waterUsage'] ?? null;
-        $waterCost = $_POST['waterCost'] ?? null;
-        $energyUsage = $_POST['energyUsage'] ?? null;
-        $energyCost = $_POST['energyCost'] ?? null;
-        $operationalExpenses = $_POST['operationalExpenses'] ?? null;
-        $budget = $_POST['budget'] ?? null;
-        $budgetVariance = $_POST['budgetVariance'] ?? null;
-        $observations = $_POST['observations'] ?? null;
-
-        // Preparar la consulta
-        $sql = "INSERT INTO reportes (user_id, nombre_proyecto, codigo_proyecto, responsable, fecha_inicio, fecha_fin, 
-                consumo_agua, costo_agua, consumo_energia, costo_energia, gastos_operativos, presupuesto_total, 
-                variacion_presupuesto, observaciones) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param(
-            "isssssdidddsds",
-            $user_id,
-            $nombreProyecto,
-            $codigoProyecto,
-            $responsable,
-            $fechaInicio,
-            $fechaFin,
-            $waterUsage,
-            $waterCost,
-            $energyUsage,
-            $energyCost,
-            $operationalExpenses,
-            $budget,
-            $budgetVariance,
-            $observations
-        );
-
-        if ($stmt->execute()) {
-            $successMessage = "Reporte guardado exitosamente.";
-            header("Location: success.php"); // Redirige a una página de éxito (ajusta según tu proyecto)
-            exit;
-        } else {
-            $errorMessage = "Error al guardar el reporte: " . $stmt->error;
-        }
-
-        $stmt->close();
-        $conn->close();
-    }
-}
+// Obtener los proyectos creados por el usuario
+$user_id = $_SESSION['user_id'];
+$sql = "SELECT id, nombre FROM proyectos WHERE usuario_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$proyectos = $result->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -111,15 +54,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form action="ingresar_reporte.php" method="post">
-            <!-- Información básica del proyecto -->
+            <!-- Selección de proyecto -->
             <div class="mb-3">
-                <label for="projectName" class="form-label">Nombre del Proyecto</label>
-                <input type="text" class="form-control" name="projectName" id="projectName" placeholder="Nombre del Proyecto" required>
+                <label for="proyecto" class="form-label">Selecciona un Proyecto</label>
+                <select class="form-control" name="proyecto_id" id="proyecto" required>
+                    <option value="">Selecciona un proyecto</option>
+                    <?php foreach ($proyectos as $proyecto): ?>
+                        <option value="<?= htmlspecialchars($proyecto['id']); ?>">
+                            <?= htmlspecialchars($proyecto['nombre']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
             </div>
-            <div class="mb-3">
-                <label for="projectCode" class="form-label">ID o Código del Proyecto</label>
-                <input type="text" class="form-control" name="projectCode" id="projectCode" placeholder="Código del Proyecto" required>
-            </div>
+
+            <!-- Información básica del reporte -->
             <div class="mb-3">
                 <label for="projectManager" class="form-label">Responsable del Proyecto</label>
                 <input type="text" class="form-control" name="projectManager" id="projectManager" placeholder="Nombre del Responsable" required>
@@ -133,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="date" class="form-control" name="endDate" id="endDate" required>
             </div>
 
-            <!-- Campos según los objetivos seleccionados -->
+            <!-- Campos dinámicos según objetivos -->
             <?php if (in_array('agua', $objetivosSeleccionados)): ?>
                 <div class="mb-3">
                     <label for="waterUsage" class="form-label">Consumo Total de Agua (m³)</label>
@@ -171,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
-            <!-- Observaciones generales -->
+            <!-- Observaciones -->
             <div class="mb-3">
                 <label for="observations" class="form-label">Observaciones</label>
                 <textarea class="form-control" name="observations" id="observations" rows="4" placeholder="Notas adicionales"></textarea>
