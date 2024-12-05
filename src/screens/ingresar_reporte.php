@@ -53,7 +53,7 @@ $stmt->close();
             <div class="alert alert-success"><?php echo $successMessage; ?></div>
         <?php endif; ?>
 
-        <form action="ingresar_reporte.php" method="post">
+        <form action="guardar_reporte.php" method="post">
             <!-- Selección de proyecto -->
             <div class="mb-3">
                 <label for="proyecto" class="form-label">Selecciona un Proyecto</label>
