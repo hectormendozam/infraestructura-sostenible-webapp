@@ -206,7 +206,60 @@ if (!isset($_SESSION['user_id'])) {
             .catch(err => console.error('Error al cargar la comparación de proyectos:', err));
         });
 
-        
+// Esperar a que el DOM esté completamente cargado antes de ejecutar el script
+document.addEventListener('DOMContentLoaded', () => {
+    // Referencia a la tabla donde se mostrarán los reportes recientes
+    const reportesRecientesTable = document.getElementById('reportesRecientes');
+
+    // Función asincrónica para obtener los reportes recientes desde el backend
+    async function fetchReportesRecientes() {
+        try {
+            const response = await fetch('get_reportes_recientes.php'); // Llama al endpoint
+            return await response.json(); // Devuelve la respuesta como JSON
+        } catch (error) {
+            console.error('Error al obtener los reportes recientes:', error);
+            return [];
+        }
+    }
+
+    // Llamada para obtener y mostrar los reportes recientes
+    fetchReportesRecientes()
+        .then(data => {
+            // Limpiar el contenido previo de la tabla
+            reportesRecientesTable.innerHTML = '';
+
+            if (data.length > 0) {
+                // Si hay reportes, generar filas dinámicamente
+                data.forEach(reporte => {
+                    const row = `
+                        <tr>
+                            <td>${reporte.id}</td>
+                            <td>${reporte.proyecto}</td>
+                            <td>${reporte.fecha_inicio}</td>
+                            <td>${reporte.fecha_fin}</td>
+                            <td>${reporte.observaciones || 'N/A'}</td>
+                        </tr>
+                    `;
+                    // Agregar cada fila al cuerpo de la tabla
+                    reportesRecientesTable.innerHTML += row;
+                });
+            } else {
+                // Si no hay reportes, mostrar un mensaje
+                reportesRecientesTable.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center">No hay reportes recientes.</td>
+                    </tr>
+                `;
+            }
+        })
+        .catch(err => {
+            // Manejo de errores en la llamada al backend
+            console.error('Error al cargar los reportes recientes:', err);
+        });
+});
+
+
+
     </script>
 </body>
 </html>
