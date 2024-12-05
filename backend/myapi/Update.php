@@ -6,7 +6,7 @@ require_once __DIR__ .'/Database.php';
 
 class Update extends Database {
 
-    public function __construct($db, $user='root', $pass='Capitan23') {
+    public function __construct($db, $user='root', $pass='12345678') {
         parent::__construct($user,$pass, $db);
     }
 
@@ -19,7 +19,7 @@ class Update extends Database {
         // SE VERIFICA HABER RECIBIDO EL ID
         if( isset($jsonOBJ->id) ) {
             // SE REALIZA LA QUERY DE BÚSQUEDA Y AL MISMO TIEMPO SE VALIDA SI HUBO RESULTADOS
-            $sql =  "UPDATE proyectos SET nombre='{$jsonOBJ->name}', descripcion='{$jsonOBJ->description}' WHERE id={$jsonOBJ->id}";
+            $sql =  "UPDATE proyectos SET nombre='{$jsonOBJ->name}', descripcion='{$jsonOBJ->descripcion}' WHERE id={$jsonOBJ->id}";
             $this->conexion->set_charset("utf8");
             if ( $this->conexion->query($sql) ) {
                 $this->data['status'] =  "success";

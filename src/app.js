@@ -54,7 +54,7 @@ $(document).ready(function(){
                             <tr projectId="${project.id}">
                                 <td>${project.id}</td>
                                 <td>
-                                <a href="#" class="project-item">${project.nombre}</a>                                
+                                <a href="#" style="cursor: pointer;">${project.nombre}</a>                            
                                 </td>
                                 <td>${project.descripcion}</td>
                             <td>
@@ -82,7 +82,7 @@ $(document).ready(function(){
         if($('#search').val()) {
             let search = $('#search').val();
             $.ajax({
-                url: '../../backend/project-search.php?search='+$('#search').val(),
+                url: '../../backend/project-search.php',
                 data: {search},
                 type: 'GET',
                 success: function (response) {
@@ -100,8 +100,11 @@ $(document).ready(function(){
                                 template += `
                                     <tr projectId="${project.id}">
                                         <td>${project.id}</td>
-                                        <td>${project.nombre}</td>
+                                        <td>
+                                        <a href="#" style="cursor: pointer;">${project.nombre}</a>                            
+                                        </td>
                                         <td>${project.descripcion}</td>
+                                        <td>
                                             <button class="project-delete btn btn-danger">
                                                 Eliminar
                                             </button>
@@ -110,9 +113,9 @@ $(document).ready(function(){
                                 `;
                             });
                             // SE HACE VISIBLE LA BARRA DE ESTADO
-                            $('#project-result').show();
+                            //$('#project-result').show();
                             // SE INSERTA LA PLANTILLA EN EL ELEMENTO CON ID "productos"
-                            $('#projects').html(template);    
+                            document.getElementById("projects").innerHTML = template;
                         }
                     }
                 }
@@ -160,7 +163,36 @@ $(document).ready(function(){
         });
     });
 
-    listarProyectos();
+    $('#project-form').submit(e => {
+        e.preventDefault();
+
+        // SE AGREGA AL JSON EL NOMBRE DEL PRODUCTO
+        postData['nombre'] = $('#name').val();
+        postData['id'] = $('#productId').val();
+        postData['descripcion'] = $('#description').val();
+
+        const url = edit === false ? '../../backend/project-add.php' : '../../backend/project-edit.php';
+        
+        $.post(url, postData, (response) => {
+            console.log(response);
+            // SE OBTIENE EL OBJETO DE DATOS A PARTIR DE UN STRING JSON
+            let respuesta = JSON.parse(response);
+            // SE MUESTRA UN MENSAJE DE ÉXITO O DE ERROR
+            alert(respuesta.message);
+            $('#name').val('');
+            $('#description').val('');
+
+            // SE HACE VISIBLE LA BARRA DE ESTADO
+            $('#project-result').show();
+            
+            // SE LISTAN TODOS LOS PRODUCTOS
+            listarProyectos();
+            // SE REGRESA LA BANDERA DE EDICIÓN A false
+            edit = false;
+        });
+    });
+
+
 
     $(document).on('click', '.project-delete', (e) => {
         if(confirm('¿Realmente deseas eliminar el proyecto?')) {
@@ -185,21 +217,33 @@ $(document).ready(function(){
     listarProyectos();
 
     $(document).on('click', '.project-item', (e) => {
-        let row = $(this)[0].parentElement.parentElement;
+        e.preventDefault();
+        const element = $(e.currentTarget).closest('tr'); 
         const id = $(element).attr('projectId');
-        $.post('../../backend/project-single.php', {id}, (response) => {
+
+        $.post('../../backend/project-single.php', {id: id}, (response) => {
             edit = true;
             // SE CONVIERTE A OBJETO EL JSON OBTENIDO
             let project = JSON.parse(response);
+            console.log("Proyecto seleccionado:", project);
             // SE INSERTAN LOS DATOS ESPECIALES EN LOS CAMPOS CORRESPONDIENTES
-            $('#projectId').val(project['id']);
-            $('#name').val(project['name']);
-            $('#description').val(project['description']);
+            $('#projectId').val(project.id);
+            $('#name').val(project.nombre);
+            $('#description').val(project.descripcion);
 
-            $('#botonFormulario').html(edit === false ? 'Agregar producto' : 'Editar producto');
+            botonAgregar();
         });
-        e.preventDefault();
+        
     });
+
+    function botonAgregar(){
+        console.log(edit);
+        if(edit){
+            $('#botonFormulario').text('Agregar proyecto');
+        }else{
+            $('#botonFormulario').text('Editar proyecto');
+        }
+    }
     
     document.addEventListener("DOMContentLoaded", () => {
         // Rellenar campos con datos del usuario
