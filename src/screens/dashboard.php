@@ -72,6 +72,31 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
                 </div>
             </div>
+            <div class="row g-3 mt-4">
+
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Reportes Recientes</h5>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Proyecto</th>
+                                    <th>Fecha de Inicio</th>
+                                    <th>Fecha de Fin</th>
+                                    <th>Observaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportesRecientes">
+                                <!-- Los datos serán llenados dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         </div>
     </div>
 
@@ -180,6 +205,8 @@ if (!isset($_SESSION['user_id'])) {
             })
             .catch(err => console.error('Error al cargar la comparación de proyectos:', err));
         });
+
+        
     </script>
 </body>
 </html>
