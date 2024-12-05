@@ -53,7 +53,9 @@ $(document).ready(function(){
                         template += `
                             <tr projectId="${project.id}">
                                 <td>${project.id}</td>
-                                <td>${project.nombre}</td>
+                                <td>
+                                <a href="#" class="project-item">${project.nombre}</a>                                
+                                </td>
                                 <td>${project.descripcion}</td>
                             <td>
                                 <button class="project-delete btn btn-danger">
@@ -63,7 +65,7 @@ $(document).ready(function(){
                         </tr>
                         `;
                     });
-                    $('#projects').append(template);
+                    document.getElementById("projects").innerHTML = template;
                 } else {
                     $('#projects').html('<tr><td colspan="3">No hay proyectos registrados.</td></tr>');
                 }
@@ -74,6 +76,7 @@ $(document).ready(function(){
         });
     }
 
+    listarProyectos();
 
     $('#search').keyup(function() {
         if($('#search').val()) {
@@ -138,11 +141,14 @@ $(document).ready(function(){
             contentType: 'application/json',
             data: JSON.stringify({ name, description, user_id }),
             success: function (response) {
-                console.log("Respuesta del servidor:", response);
+                let respuesta = JSON.parse(response);
+                console.log("Respuesta del servidor:", respuesta);
                 // La respuesta ya es un objeto, no necesitas JSON.parse()
-                if (response.status === 'success') {
-                    alert('Proyecto agregado correctamente');
+                if (respuesta.status === 'success') {
+                    alert(respuesta.message);    
                     listarProyectos();
+                    edit = false;
+                    $('#project-form')[0].reset();
                 } else {
                     alert('Error: ' + response.message);
                 }
@@ -153,6 +159,8 @@ $(document).ready(function(){
             }
         });
     });
+
+    listarProyectos();
 
     $(document).on('click', '.project-delete', (e) => {
         if(confirm('¿Realmente deseas eliminar el proyecto?')) {
@@ -174,20 +182,21 @@ $(document).ready(function(){
         }
     });
 
+    listarProyectos();
+
     $(document).on('click', '.project-item', (e) => {
-        const element = $(this)[0].activeElement.parentElement.parentElement;
+        let row = $(this)[0].parentElement.parentElement;
         const id = $(element).attr('projectId');
         $.post('../../backend/project-single.php', {id}, (response) => {
+            edit = true;
             // SE CONVIERTE A OBJETO EL JSON OBTENIDO
             let project = JSON.parse(response);
             // SE INSERTAN LOS DATOS ESPECIALES EN LOS CAMPOS CORRESPONDIENTES
-            $('#name').val(project.nombre);
-            $('#description').val(project.descripcion);
-            // EL ID SE INSERTA EN UN CAMPO OCULTO PARA USARLO DESPUÉS PARA LA ACTUALIZACIÓN
-            $('#projectId').val(project.id);
-            
-            // SE PONE LA BANDERA DE EDICIÓN EN true
-            edit = true;
+            $('#projectId').val(project['id']);
+            $('#name').val(project['name']);
+            $('#description').val(project['description']);
+
+            $('#botonFormulario').html(edit === false ? 'Agregar producto' : 'Editar producto');
         });
         e.preventDefault();
     });

@@ -26,20 +26,28 @@ class Create extends Database {
             $result = $this->conexion->query($sql);
 
         if ($result->num_rows == 0) {
-            $this->conexion->set_charset("utf8");
-                $sql = "INSERT INTO proyectos VALUES (null, {$jsonOBJ->name}, '{$jsonOBJ->description}', '{$jsonOBJ->user_id}', 0)";
-                if($this->conexion->query($sql)){
-                    $this->data['status'] =  "success";
-                    $this->data['message'] =  "El proyecto se ha agregado correctamente";
+            $sql = "INSERT INTO proyectos (nombre, descripcion, usuario_id, eliminado) VALUES (?, ?, ?, 0)";
+                $stmt = $this->conexion->prepare($sql);
+                $stmt->bind_param("ssi", $jsonOBJ->name, $jsonOBJ->description, $jsonOBJ->user_id); // "ssi" indica: string, string, integer
+
+                if ($stmt->execute()) {
+                    $this->data['status'] = "success";
+                    $this->data['message'] = "El proyecto se ha agregado correctamente";
                 } else {
-                    $this->data['message'] = "ERROR: No se ejecuto $sql. " . mysqli_error($this->conexion);
+                    $this->data['message'] = "Error al agregar el proyecto: " . $this->conexion->error;
                 }
+
+                $stmt->close();
+            } else {
+                $this->data['message'] = "Ya existe un proyecto con ese nombre.";
+            }
+        } else {
+            $this->data['message'] = "Faltan datos obligatorios.";
         }
-        $result->free();
+
+        // Cerrar la conexión
         $this->conexion->close();
-        }
     }
-    
 }
 
 ?>
