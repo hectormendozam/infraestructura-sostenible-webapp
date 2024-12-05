@@ -193,6 +193,69 @@ if (!isset($_SESSION['user_id'])) {
                 console.error('Error al cargar el progreso de objetivos:', err);
             });
         });
+
+        document.addEventListener('DOMContentLoaded', () => {
+    const comparacionCtx = document.getElementById('comparacionChart').getContext('2d');
+
+    async function fetchComparacionProyectos() {
+        const response = await fetch('../backend/get_comparacion_proyectos.php');
+        return response.json();
+    }
+
+    fetchComparacionProyectos()
+    .then(data => {
+        const labels = data.map(d => d.nombre_proyecto); // Nombres de los proyectos
+        const presupuestos = data.map(d => d.presupuesto_total); // Presupuestos
+        const consumosEnergia = data.map(d => d.consumo_energia); // Consumo energético
+        const consumosAgua = data.map(d => d.consumo_agua); // Consumo de agua
+
+        new Chart(comparacionCtx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Presupuesto Total ($ MXN)',
+                        data: presupuestos,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Consumo Energético (kWh)',
+                        data: consumosEnergia,
+                        backgroundColor: 'rgba(255, 206, 86, 0.6)',
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Consumo de Agua (m³)',
+                        data: consumosAgua,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top' // Leyenda en la parte superior
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true // Escala desde cero en el eje Y
+                    }
+                }
+            }
+        });
+    })
+    .catch(err => {
+        console.error('Error al cargar la comparación de proyectos:', err);
+    });
+
     </script>
 </body>
 </html>
