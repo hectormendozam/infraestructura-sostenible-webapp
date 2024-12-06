@@ -96,7 +96,7 @@ if (!empty($objetivosSeleccionados)) {
                     <a href="objectives.php" class="btn btn-secondary btn-lg">Volver a Objetivos</a>
                 </div>
             <?php else: ?>
-                <h2 class="text-center text-primary mb-4">Ingresa los Objetivos donde quieres que te ayudemos</h2>
+                <h2 class="text-center text-primary mb-4">Ingresa en que áreas quieres llevar un registro</h2>
                 <form action="preguntar_accion.php" method="post">
                     <!-- Lista de opciones -->
                     <div class="form-check mb-3">

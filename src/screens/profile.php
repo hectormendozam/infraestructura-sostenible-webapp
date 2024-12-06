@@ -29,17 +29,17 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EcoTrack - Perfil</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="icon" href="src/img/planeta.png" type="image/x-icon">
+    <link rel="icon" href="../img/planeta.png" type="image/x-icon">
 </head>
 <body>
     <div class="d-flex">
         <!-- Menú de navegación -->
         <nav class="bg-dark text-white vh-100 p-3" style="width: 250px;">
             <!-- Imagen del logo arriba del título -->
-            <h2 class="text-center">EcoTrack</h2>
             <div class="text-center mb-3">
                 <img src="../img/Ecotrack.png" alt="EcoTrack Logo" style="width: 100px; height: 100px;">
             </div>
+            <h2 class="text-center">EcoTrack</h2>
             <ul class="nav flex-column mt-4">
                 <li class="nav-item mb-2">
                     <a href="index.php" class="nav-link text-white">Inicio</a>
@@ -48,7 +48,7 @@ $conn->close();
                     <a href="dashboard.php" class="nav-link text-white">Estadísticas</a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="objectives.php" class="nav-link text-white">Metas y Objetivos</a>
+                    <a href="objectives.php" class="nav-link text-white">Reportes y Objetivos</a>
                 </li>
                 <li class="nav-item mb-2">
                     <a href="profile.php" class="nav-link text-white">Perfil</a>

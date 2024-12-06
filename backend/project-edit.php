@@ -4,6 +4,10 @@
     require_once __DIR__.'/MYAPI/Update.php';
 
     $proyectos = new Update('proyecto_db');
-    $proyectos->edit( json_decode( json_encode($_POST) ) );
+    $entrada = file_get_contents('php://input');
+    $jsonOBJ = json_decode($entrada);
+    $proyectos->edit( $jsonOBJ );
     echo $proyectos->getData();
+
+
 ?>

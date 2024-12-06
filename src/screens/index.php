@@ -17,7 +17,7 @@ if (!isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EcoTrack - Inicio</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="icon" href="src/img/planeta.png" type="image/x-icon">
+    <link rel="icon" href="../img/planeta.png" type="image/x-icon">
 </head>
 <body>
     <div class="d-flex content">
@@ -36,7 +36,7 @@ if (!isset($_SESSION['user_id'])) {
                     <a href="dashboard.php" class="nav-link text-white">Estadísticas</a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="objectives.php" class="nav-link text-white">Metas y Objetivos</a>
+                    <a href="objectives.php" class="nav-link text-white">Reportes y Objetivos</a>
                 </li>
                 <li class="nav-item mb-2">
                     <a href="profile.php" class="nav-link text-white">Perfil</a>
@@ -51,7 +51,7 @@ if (!isset($_SESSION['user_id'])) {
             <!-- Barra de navegación superior -->
             <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 rounded">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#">Proyectos de Infraestructura</a>
+                    <a class="navbar-brand">Bienvenido, <?php echo $_SESSION['username'] ?? ''; ?></a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -70,14 +70,15 @@ if (!isset($_SESSION['user_id'])) {
                 <div class="col-md-4">
                     <form id="project-form">
                         <div class="form-group">
+                            <h4 class="text-primary">Ingresa los datos</h4> <br>
                             <fieldset>
                                 <input class="form-control mb-3" type="text" id="name" name="name" placeholder="Nombre de proyecto">
                                 <textarea class="form-control mb-3" id="description" name="description" placeholder="Detalles del proyecto"></textarea>
                             </fieldset>                
                         </div>
-                        <input type="hidden" id="projectId">
+                        <input type="hidden" id="projectId" name="projectId">
                         <input type="hidden" id="user_id" value="<?php echo $_SESSION['user_id'] ?? ''; ?>">
-                        <button class="btn btn-primary w-100" type="submit">Agregar Proyecto</button>
+                        <button class="btn btn-primary w-100" type="submit" id="botonFormulario">Agregar Proyecto</button>
                     </form>
                 </div>
                 
