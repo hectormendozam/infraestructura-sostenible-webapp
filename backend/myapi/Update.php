@@ -6,7 +6,7 @@ require_once __DIR__ . '/Database.php';
 
 class Update extends Database {
 
-    public function __construct($db, $user = 'root', $pass = 'Capitan23') {
+    public function __construct($db, $user = 'root', $pass = '12345678') {
         parent::__construct($user, $pass, $db);
     }
 
@@ -37,9 +37,5 @@ class Update extends Database {
         } else {
             $this->data['message'] = "ERROR: ID del proyecto no proporcionado.";
         }
-    }
-
-    public function getData() {
-        return json_encode($this->data, JSON_UNESCAPED_UNICODE);
     }
 }

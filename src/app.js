@@ -18,7 +18,7 @@ $(document).ready(function(){
                             <tr projectId="${project.id}">
                                 <td>${project.id}</td>
                                 <td>
-                                <a href="#" style="cursor: pointer;">${project.nombre}</a>                            
+                                ${project.nombre}                       
                                 </td>
                                 <td>${project.descripcion}</td>
                             <td>
@@ -65,7 +65,7 @@ $(document).ready(function(){
                                     <tr projectId="${project.id}">
                                         <td>${project.id}</td>
                                         <td>
-                                        <a href="#" style="cursor: pointer;">${project.nombre}</a>                            
+                                        ${project.nombre}                          
                                         </td>
                                         <td>${project.descripcion}</td>
                                         <td>

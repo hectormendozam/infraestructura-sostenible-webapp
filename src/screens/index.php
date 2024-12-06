@@ -89,9 +89,13 @@ if (!isset($_SESSION['user_id'])) {
                         </div>
                         <input type="hidden" id="projectId" name="projectId">
                         <input type="hidden" id="user_id" value="<?php echo $_SESSION['user_id'] ?? ''; ?>">
-                        <button class="btn btn-primary w-100" type="submit" id="botonFormulario">Agregar Proyecto</button>
+                        <button class="btn btn-primary w-100" type="submit" id="botonFormulario">Agregar Proyecto</button><break><break>
+
                     </form>
+                    
                 </div>
+
+
                 
                 <!-- TABLA  -->
                 <div class="col-md-8">
@@ -112,7 +116,11 @@ if (!isset($_SESSION['user_id'])) {
                         </thead>
                         <tbody id="projects"></tbody>
                     </table>
+                    <button class="btn btn-primary w-100 mt-3" id="botonEditar">
+                        <a href="edit_projects.php" class="nav-link text-white">Editar Proyectos</a>
+                    </button>
                 </div>
+                
             </div>
         </div>
     </div>
