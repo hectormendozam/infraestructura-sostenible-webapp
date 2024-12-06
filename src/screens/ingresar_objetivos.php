@@ -29,8 +29,17 @@ if (!empty($objetivosSeleccionados)) {
     <title>EcoTrack - Confirmar Acción</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
     <link rel="icon" href="src/img/planeta.png" type="image/x-icon">
     <style>
+         * {
+                font-family: "Noto Serif JP", serif;
+                font-optical-sizing: auto;
+                font-weight: 200;
+                font-style: normal;
+            }
         .form-check {
             padding: 20px; /* Añade espacio vertical a cada opción */
             font-size: 1.5rem; /* Aumenta el tamaño del texto */
@@ -52,6 +61,7 @@ if (!empty($objetivosSeleccionados)) {
         .btn-large {
             font-size: 1.3rem;
         }
+
     </style>
 </head>
 <body>
