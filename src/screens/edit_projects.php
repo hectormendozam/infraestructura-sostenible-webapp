@@ -17,7 +17,7 @@ if (!isset($_SESSION['user_id'])) {
 
 // Obtener los proyectos creados por el usuario
 $user_id = $_SESSION['user_id'];
-$sql = "SELECT id, nombre, descripcion FROM proyectos WHERE usuario_id = ?";
+$sql = "SELECT id, nombre, descripcion FROM proyectos WHERE usuario_id = ? AND eliminado = 0";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -57,7 +57,9 @@ $stmt->close();
                 <select class="form-control" name="proyecto_id" id="proyecto" required>
                     <option value="">Selecciona un proyecto</option>
                     <?php foreach ($proyectos as $proyecto): ?>
-                        <option value="<?= htmlspecialchars($proyecto['id']); ?>">
+                        <option value="<?= htmlspecialchars($proyecto['id']); ?>"
+                                data-nombre="<?= htmlspecialchars($proyecto['nombre']); ?>"
+                                data-descripcion="<?= htmlspecialchars($proyecto['descripcion']); ?>">
                             <?= htmlspecialchars($proyecto['nombre']); ?>
                         </option>
                     <?php endforeach; ?>
@@ -66,10 +68,10 @@ $stmt->close();
             <div class="form-group">
                 <fieldset>
                     <label for="name" class="form-label">Nombre del Proyecto</label>
-                    <input class="form-control mb-3" type="text" id="name" name="name" value="<?= htmlspecialchars($proyecto['nombre']); ?>">
+                    <input class="form-control mb-3" type="text" id="name" name="name">
 
                     <label for="description" class="form-label">Descripción del Proyecto</label>
-                    <textarea class="form-control mb-3" id="description" name="description" value="<?= htmlspecialchars($proyecto['descripcion']); ?>"></textarea>
+                    <textarea class="form-control mb-3" id="description" name="description"></textarea>
                 </fieldset>                
             </div>
             <button class="btn btn-primary w-100" type="submit" id="botonCambios">Guardar Cambios</button><break><break>
@@ -77,4 +79,18 @@ $stmt->close();
 </div>
     
 </body>
+<script>
+    document.getElementById('proyecto').addEventListener('change', function () {
+        // Obtener el proyecto seleccionado
+        const selectedOption = this.options[this.selectedIndex];
+
+        // Obtener los atributos data-* de la opción seleccionada
+        const nombre = selectedOption.getAttribute('data-nombre') || '';
+        const descripcion = selectedOption.getAttribute('data-descripcion') || '';
+
+        // Asignar los valores a los campos del formulario
+        document.getElementById('name').value = nombre;
+        document.getElementById('description').value = descripcion;
+    });
+</script>
 </html>

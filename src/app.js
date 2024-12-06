@@ -90,7 +90,7 @@ $(document).ready(function(){
         }
     });
 
-    /*$('#project-form').submit(function (e) {
+    $('#project-form').submit(function (e) {
         e.preventDefault();
     
         let name = $('#name').val().trim();
@@ -143,7 +143,7 @@ $(document).ready(function(){
         });
     });
 
-    $('#project-form').submit(e => {
+    /*$('#project-form').submit(e => {
         e.preventDefault();
 
         // SE AGREGA AL JSON EL NOMBRE DEL PRODUCTO
@@ -170,7 +170,7 @@ $(document).ready(function(){
             // SE REGRESA LA BANDERA DE EDICIÓN A false
             edit = false;
         });
-    });*/
+    });
 
     $('#project-form').submit(function (e) {
         e.preventDefault();
@@ -223,7 +223,7 @@ $(document).ready(function(){
                 alert('Error al comunicarse con el servidor.');
             }
         });
-    });    
+    });  */
 
     $(document).on('click', '.project-delete', (e) => {
         if(confirm('¿Realmente deseas eliminar el proyecto?')) {
@@ -245,15 +245,14 @@ $(document).ready(function(){
         }
     });
 
-    listarProyectos();
 
     $(document).on('click', '.project-item', (e) => {
         e.preventDefault();
-        const element = $(e.currentTarget).closest('tr'); 
-        const id = $(element).attr('projectId');
-
-        $.post('../../backend/project-single.php', {id: id}, (response) => {
-            edit = true;
+        let row = $(this)[0].activeElement.parentElement.parentElement;
+        let id = $(row).attr('id');
+        console.log('ID:',id);
+        edit= true;
+        $.post('../../backend/project-single.php', {id}, (response) => {
             // SE CONVIERTE A OBJETO EL JSON OBTENIDO
             let project = JSON.parse(response);
             console.log("Proyecto seleccionado:", project);
