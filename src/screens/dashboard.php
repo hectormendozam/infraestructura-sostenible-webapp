@@ -83,7 +83,17 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
                 </div>
             </div>
-            <div class="row g-3 mt-4">
+            <div class="row g-3 mt-4 mb-4">
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                        <h5 class="card-title">Tendencias Históricas</h5>
+                        <canvas id="tendenciasChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            </div>
 
             <div class="col-12">
                 <div class="card shadow-sm">
@@ -268,6 +278,76 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error al cargar los reportes recientes:', err);
         });
 });
+    
+document.addEventListener('DOMContentLoaded', () => {
+    const tendenciasCtx = document.getElementById('tendenciasChart').getContext('2d');
+
+    async function fetchTendenciasHistoricas() {
+        const response = await fetch('get_tendencias_historicas.php');
+        return response.json();
+    }
+
+    fetchTendenciasHistoricas().then(data => {
+        const fechas = data.map(d => d.fecha_inicio);
+        const consumosEnergia = data.map(d => d.consumo_energia);
+        const consumosAgua = data.map(d => d.consumo_agua);
+        const gastosOperativos = data.map(d => d.gastos_operativos);
+
+        new Chart(tendenciasCtx, {
+            type: 'line',
+            data: {
+                labels: fechas,
+                datasets: [
+                    {
+                        label: 'Consumo Energético (kWh)',
+                        data: consumosEnergia,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        fill: true
+                    },
+                    {
+                        label: 'Consumo de Agua (m³)',
+                        data: consumosAgua,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true
+                    },
+                    {
+                        label: 'Gastos Operativos ($ MXN)',
+                        data: gastosOperativos,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Fechas'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Valores'
+                        }
+                    }
+                }
+            }
+        });
+    }).catch(err => console.error('Error al cargar las tendencias históricas:', err));
+});
+
 
 
 
