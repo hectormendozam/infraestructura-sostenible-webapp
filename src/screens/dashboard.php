@@ -84,38 +84,45 @@ if (!isset($_SESSION['user_id'])) {
                 </div>
             </div>
             <div class="row g-3 mt-4 mb-4">
-                <div class="col-md-6">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                        <h5 class="card-title">Tendencias Históricas</h5>
-                        <canvas id="tendenciasChart"></canvas>
-                    </div>
-                </div>
+    <!-- Gráfica de Tendencias Históricas -->
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Tendencias Históricas</h5>
+                <canvas id="tendenciasChart"></canvas>
             </div>
+        </div>
+    </div>
 
-            </div>
-
-            <div class="col-12">
+    <!-- Tabla de Reportes Recientes con botón de despliegue -->
+            <div class="col-md-6">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">Reportes Recientes</h5>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Proyecto</th>
-                                    <th>Fecha de Inicio</th>
-                                    <th>Fecha de Fin</th>
-                                    <th>Observaciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="reportesRecientes">
-                                <!-- Los datos serán llenados dinámicamente -->
-                            </tbody>
-                        </table>
+                        <h5 class="card-title">Ver tabla de Reportes recientes</h5>
+                        <button class="btn btn-primary" id="toggleTableButton">Desplegar</button>
+                        <!-- Tabla oculta por defecto -->
+                        <div id="reportesTableContainer" class="mt-3" style="display: none;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Proyecto</th>
+                                        <th>Fecha de Inicio</th>
+                                        <th>Fecha de Fin</th>
+                                        <th>Observaciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportesRecientes">
+                                    <!-- Los datos serán llenados dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+            
         </div>
 
         </div>
@@ -348,6 +355,75 @@ document.addEventListener('DOMContentLoaded', () => {
     }).catch(err => console.error('Error al cargar las tendencias históricas:', err));
 });
 
+
+document.getElementById('toggleTableButton').addEventListener('click', function () {
+        const tableContainer = document.getElementById('reportesTableContainer');
+        if (tableContainer.style.display === 'none' || tableContainer.style.display === '') {
+            tableContainer.style.display = 'block';
+            this.textContent = 'Ocultar';
+        } else {
+            tableContainer.style.display = 'none';
+            this.textContent = 'Desplegar';
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+    const toggleButton = document.getElementById('toggleTableButton');
+    const tableContainer = document.getElementById('tableContainer');
+    const reportesRecientesTable = document.getElementById('reportesRecientes');
+
+    async function fetchReportesRecientes() {
+        try {
+            const response = await fetch('get_reportes_recientes.php');
+            return await response.json();
+        } catch (error) {
+            console.error('Error al cargar los reportes recientes:', error);
+            return [];
+        }
+    }
+
+    function cargarTabla() {
+        fetchReportesRecientes()
+            .then(data => {
+                reportesRecientesTable.innerHTML = '';
+
+                if (data.length > 0) {
+                    data.forEach(reporte => {
+                        const row = `
+                            <tr>
+                                <td>${reporte.id}</td>
+                                <td>${reporte.proyecto}</td>
+                                <td>${reporte.fecha_inicio}</td>
+                                <td>${reporte.fecha_fin}</td>
+                                <td>${reporte.observaciones || 'N/A'}</td>
+                            </tr>
+                        `;
+                        reportesRecientesTable.innerHTML += row;
+                    });
+                } else {
+                    reportesRecientesTable.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center">No hay reportes recientes.</td>
+                        </tr>
+                    `;
+                }
+            })
+            .catch(err => {
+                console.error('Error al cargar los reportes recientes:', err);
+            });
+    }
+
+    toggleButton.addEventListener('click', () => {
+        if (tableContainer.style.display === 'none') {
+            tableContainer.style.display = 'block';
+            toggleButton.textContent = 'Ocultar';
+            cargarTabla(); // Cargar datos al desplegar
+        } else {
+            tableContainer.style.display = 'none';
+            toggleButton.textContent = 'Desplegar';
+        }
+    });
+});
 
 
 
