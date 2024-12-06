@@ -19,16 +19,16 @@ if (!isset($_SESSION['user_id'])) {
     <title>EcoTrack - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="icon" href="src/img/planeta.png" type="image/x-icon">
+    <link rel="icon" href="../img/planeta.png" type="image/x-icon">
 </head>
 <body>
     <div class="d-flex">
         <!-- Menú de navegación -->
         <nav class="bg-dark text-white vh-100 p-3" style="width: 250px;">
-            <h2 class="text-center">EcoTrack</h2>
-            <div class="text-center mb-3">
+        <div class="text-center mb-3">
                 <img src="../img/Ecotrack.png" alt="EcoTrack Logo" style="width: 100px; height: 100px;">
             </div>
+            <h2 class="text-center">EcoTrack</h2>
             <ul class="nav flex-column mt-4">
                 <li class="nav-item mb-2">
                     <a href="index.php" class="nav-link text-white">Inicio</a>

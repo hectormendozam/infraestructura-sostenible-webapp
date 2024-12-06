@@ -18,7 +18,7 @@ if (!isset($_SESSION['user_id'])) {
     <title>EcoTrack - Objetivos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="icon" href="src/img/planeta.png" type="image/x-icon">
+    <link rel="icon" href="../img/planeta.png" type="image/x-icon">
     <style>
         /* Fondo de la imagen */
         body {
