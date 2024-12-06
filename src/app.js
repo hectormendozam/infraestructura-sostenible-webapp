@@ -129,28 +129,44 @@ $(document).ready(function(){
         let name = $('#name').val().trim();
         let description = $('#description').val().trim();
         let user_id = $('#user_id').val();
-        
+        let projectId = $('#projectId').val(); // Si está vacío significa que estamos creando un nuevo proyecto
+    
+        // Verificar que los campos no estén vacíos
         if (!name || !description) {
             alert('Por favor, completa todos los campos.');
             return;
         }
     
+        // Preparar los datos a enviar
+        let postData = {
+            name: name,
+            description: description,
+            user_id: user_id,
+            projectId: projectId // En caso de edición, se pasa el id del proyecto
+        };
+    
+        // Determinar la URL a la que se enviará el request dependiendo si es creación o edición
+        const url = projectId ? '../../backend/project-edit.php' : '../../backend/project-add.php';
+    
+        // Enviar los datos mediante AJAX
         $.ajax({
-            url: '../../backend/project-add.php',
+            url: url,
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({ name, description, user_id }),
+            data: JSON.stringify(postData),
             success: function (response) {
                 let respuesta = JSON.parse(response);
                 console.log("Respuesta del servidor:", respuesta);
-                // La respuesta ya es un objeto, no necesitas JSON.parse()
+    
+                // Comprobar si la respuesta es exitosa
                 if (respuesta.status === 'success') {
-                    alert(respuesta.message);    
-                    listarProyectos();
-                    edit = false;
-                    $('#project-form')[0].reset();
+                    alert(respuesta.message);
+                    listarProyectos(); // Refrescar la lista de proyectos
+                    $('#project-form')[0].reset(); // Limpiar el formulario
+                    $('#projectId').val(''); // Limpiar el campo oculto del ID
+                    edit = false; // Reiniciar la bandera de edición
                 } else {
-                    alert('Error: ' + response.message);
+                    alert('Error: ' + respuesta.message);
                 }
             },
             error: function (xhr, status, error) {
