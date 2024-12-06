@@ -37,7 +37,7 @@ if (!isset($_SESSION['user_id'])) {
                     <a href="dashboard.php" class="nav-link text-white">Estadísticas</a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="objectives.php" class="nav-link text-white">Metas y Objetivos</a>
+                    <a href="objectives.php" class="nav-link text-white">Reportes y Objetivos</a>
                 </li>
                 <li class="nav-item mb-2">
                     <a href="profile.php" class="nav-link text-white">Perfil</a>
@@ -51,7 +51,7 @@ if (!isset($_SESSION['user_id'])) {
         <div class="flex-grow-1 bg-light p-4">
             <!-- Encabezado -->
             <div class="bg-primary text-white rounded p-3 mb-4 text-center position-relative">
-                <h1>Bienvenido al Dashboard</h1>
+                <h1>Bienvenido al Dashboard, <?php echo $_SESSION['username'] ?? ''; ?></h1>
             </div>
             <!-- Gráficas -->
             <div class="row g-3">

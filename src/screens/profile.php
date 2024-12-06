@@ -48,7 +48,7 @@ $conn->close();
                     <a href="dashboard.php" class="nav-link text-white">Estadísticas</a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="objectives.php" class="nav-link text-white">Metas y Objetivos</a>
+                    <a href="objectives.php" class="nav-link text-white">Reportes y Objetivos</a>
                 </li>
                 <li class="nav-item mb-2">
                     <a href="profile.php" class="nav-link text-white">Perfil</a>

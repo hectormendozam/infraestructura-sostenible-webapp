@@ -36,7 +36,7 @@ if (!isset($_SESSION['user_id'])) {
                     <a href="dashboard.php" class="nav-link text-white">Estadísticas</a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="objectives.php" class="nav-link text-white">Metas y Objetivos</a>
+                    <a href="objectives.php" class="nav-link text-white">Reportes y Objetivos</a>
                 </li>
                 <li class="nav-item mb-2">
                     <a href="profile.php" class="nav-link text-white">Perfil</a>
@@ -51,7 +51,7 @@ if (!isset($_SESSION['user_id'])) {
             <!-- Barra de navegación superior -->
             <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 rounded">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#">Proyectos de Infraestructura</a>
+                    <a class="navbar-brand">Bienvenido, <?php echo $_SESSION['username'] ?? ''; ?></a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -76,7 +76,7 @@ if (!isset($_SESSION['user_id'])) {
                                 <textarea class="form-control mb-3" id="description" name="description" placeholder="Detalles del proyecto"></textarea>
                             </fieldset>                
                         </div>
-                        <input type="hidden" id="projectId">
+                        <input type="hidden" id="projectId" name="projectId">
                         <input type="hidden" id="user_id" value="<?php echo $_SESSION['user_id'] ?? ''; ?>">
                         <button class="btn btn-primary w-100" type="submit" id="botonFormulario">Agregar Proyecto</button>
                     </form>

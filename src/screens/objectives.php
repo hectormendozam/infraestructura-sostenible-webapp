@@ -54,7 +54,7 @@ if (!isset($_SESSION['user_id'])) {
                     <a href="dashboard.php" class="nav-link text-white">Estadísticas</a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="objectives.php" class="nav-link text-white">Metas y Objetivos</a>
+                    <a href="objectives.php" class="nav-link text-white">Reportes y Objetivos</a>
                 </li>
                 <li class="nav-item mb-2">
                     <a href="profile.php" class="nav-link text-white">Perfil</a>
@@ -68,7 +68,7 @@ if (!isset($_SESSION['user_id'])) {
         <!-- Contenido principal -->
         <div class="flex-grow-1 bg-light d-flex justify-content-center align-items-center flex-column">
             <div class="mb-4">
-                <h1 class="text-primary">Metas y Objetivos</h1>
+                <h1 class="text-primary">Reportes y Objetivos</h1>
                 <p class="text-secondary text-center">Selecciona una opción para continuar</p>
             </div>
             <div class="d-flex gap-4">

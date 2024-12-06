@@ -3,42 +3,6 @@ $(document).ready(function(){
 
     listarProyectos();
 
-        // Manejar el envío del formulario
-        /*$('#project-form').on('submit', function(event) {
-            event.preventDefault(); // Evitar el envío normal del formulario
-    
-            // Recoger los datos del formulario
-            const nombre = $('#name').val();
-            const descripcion = $('#description').val();
-    
-            if (!nombre || !descripcion) {
-                alert('Por favor, completa todos los campos.');
-                return;
-            }
-    
-            // Enviar los datos mediante AJAX
-            $.ajax({
-                url: '../backend/project-add.php',
-                type: 'POST',
-                data: { nombre: nombre, descripcion: descripcion },
-                success: function(response) {
-                    const data = JSON.parse(response);
-    
-                    if (data.status === 'success') {
-                        alert(data.message);
-                        $('#project-form')[0].reset(); // Limpiar formulario
-                        listarProyectos(); // Actualizar la lista de proyectos
-                    } else {
-                        alert(data.message);
-                    }
-                },
-                error: function() {
-                    alert('Error al procesar la solicitud.');
-                }
-            });
-        });*/
-    
-
     // Función para listar proyectos
     function listarProyectos() {
         $.ajax({
@@ -126,7 +90,7 @@ $(document).ready(function(){
         }
     });
 
-    $('#project-form').submit(function (e) {
+    /*$('#project-form').submit(function (e) {
         e.preventDefault();
     
         let name = $('#name').val().trim();
@@ -190,9 +154,60 @@ $(document).ready(function(){
             // SE REGRESA LA BANDERA DE EDICIÓN A false
             edit = false;
         });
-    });
+    });*/
 
-
+    $('#project-form').submit(function (e) {
+        e.preventDefault();
+    
+        let name = $('#name').val().trim();
+        let description = $('#description').val().trim();
+        let user_id = $('#user_id').val();
+        let projectId = $('#projectId').val(); // Si está vacío significa que estamos creando un nuevo proyecto
+    
+        // Verificar que los campos no estén vacíos
+        if (!name || !description) {
+            alert('Por favor, completa todos los campos.');
+            return;
+        }
+    
+        // Preparar los datos a enviar
+        let postData = {
+            name: name,
+            description: description,
+            user_id: user_id,
+            projectId: projectId // En caso de edición, se pasa el id del proyecto
+        };
+    
+        // Determinar la URL a la que se enviará el request dependiendo si es creación o edición
+        const url = projectId ? '../../backend/project-edit.php' : '../../backend/project-add.php';
+    
+        // Enviar los datos mediante AJAX
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(postData),
+            success: function (response) {
+                let respuesta = JSON.parse(response);
+                console.log("Respuesta del servidor:", respuesta);
+    
+                // Comprobar si la respuesta es exitosa
+                if (respuesta.status === 'success') {
+                    alert(respuesta.message);
+                    listarProyectos(); // Refrescar la lista de proyectos
+                    $('#project-form')[0].reset(); // Limpiar el formulario
+                    $('#projectId').val(''); // Limpiar el campo oculto del ID
+                    edit = false; // Reiniciar la bandera de edición
+                } else {
+                    alert('Error: ' + respuesta.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error AJAX:', status, error);
+                alert('Error al comunicarse con el servidor.');
+            }
+        });
+    });    
 
     $(document).on('click', '.project-delete', (e) => {
         if(confirm('¿Realmente deseas eliminar el proyecto?')) {
